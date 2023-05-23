@@ -16,6 +16,11 @@ require(ggplot2)
 
 #Data
 ```{r}
-data <- read.csv(url("patient.csv"))
+data <- read.csv(url("https://raw.githubusercontent.com/Marchosh/gestational_diabetes/master/patients.csv?token=GHSAT0AAAAAACC7K4VFNJCC5HTZ23CRGRBAZDMELKA"))
 head(data)
 ```
+
+
+
+
+
