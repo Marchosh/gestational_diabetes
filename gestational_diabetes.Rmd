@@ -16,6 +16,6 @@ require(ggplot2)
 
 #Data
 ```{r}
-data <- read.csv("patient.csv")
+data <- read.csv(url("patient.csv"))
 head(data)
 ```
