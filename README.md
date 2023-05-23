@@ -1,5 +1,5 @@
 # gestational_diabetes
-## CIS690 Group Project
+# CIS690 Group Project
 
 ## Commit
 1. When you commit Create Branch - Yourname
