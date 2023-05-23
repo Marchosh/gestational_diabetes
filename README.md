@@ -1,6 +1,5 @@
-# gestational_diabetes
 # CIS690 Group Project
-
+gestational_diabetes
 ## Commit
 1. When you commit Create Branch - Yourname
 2. in github desktop -> push
