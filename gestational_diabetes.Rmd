@@ -1,0 +1,21 @@
+---
+title: "gestational_diabetes"
+output: pdf_document
+date: "2023-05-23"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Library
+```{r}
+require(ggplot2)
+```
+
+
+#Data
+```{r}
+data <- read.csv("patient.csv")
+head(data)
+```
