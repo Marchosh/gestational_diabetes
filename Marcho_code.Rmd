@@ -9,7 +9,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-install.packages("visdat")
+#install.packages("caret")
 ```
 
 #Library
@@ -19,6 +19,8 @@ library(dplyr)
 library(gridExtra)
 library(naniar)
 library(visdat)
+library(corrplot)
+library(caret)
 ```
 
 
@@ -192,6 +194,15 @@ for (var in numeric_vars) {
 
 
 # missing value
+```{r}
+# Calculate the missing values
+missing_data  <- colSums(is.na(data))
+
+# Create a bar plot of missing values
+barplot(missing_data , xlab = "Variables", ylab = "Missing Values", main = "Missing Values by Variable")
+
+```
+
 
 ```{r}
 # Calculate the number of missing values for each variable
@@ -213,12 +224,16 @@ print(p)
 ```
 
 ```{r}
-# Replace 0 with NA for missing values
-data[data == 0] <- NA
+# Create a new dataframe called missdata
+missdata <- data
+
+# Replace 0 with NA for missing values in missdata
+missdata[missdata == 0] <- NA
 
 # Plot the modified missing values heatmap
-vis_miss(data)
+vis_miss(missdata)
 ```
+
 
 Diagnosis 0 is category so is not mising value,
 THe insulin 0 is need to be investivigate wheter is it true 0 or missing value beacsue 49% of them is 0
@@ -229,87 +244,271 @@ But the other (Glucose, BloodPreassure, and BMi) variable 0 is mostlikely missin
 We can see straight long line continous from one oclumn to other it showed that,
 when 1 of the column missing the other column are also likely to be missing
 
-## Remove mssing value
+## Replace missing value (0) in (Glucose, BloodPreassure, and BMi)
 ```{r}
+cleandata <- data
+
+# Calculate the median values
+median_glucose <- median(cleandata$Glucose, na.rm = TRUE)
+median_bp <- median(cleandata$BloodPressure, na.rm = TRUE)
+median_bmi <- median(cleandata$BMI, na.rm = TRUE)
+
+# Replace 0 with median in Glucose column
+cleandata$Glucose <- ifelse(cleandata$Glucose == 0, median_glucose, cleandata$Glucose)
+
+# Replace 0 with median in BloodPressure column
+cleandata$BloodPressure <- ifelse(cleandata$BloodPressure == 0, median_bp, cleandata$BloodPressure)
+
+# Replace 0 with median in BMI column
+cleandata$BMI <- ifelse(cleandata$BMI == 0, median_bmi, cleandata$BMI)
+```
+
+
+```{r}
+# Calculate the number of missing values for each variable
+missing_counts <- cleandata %>%
+  summarise_all(~sum(is.na(.) | . == 0))
+
+# Convert missing_counts to long format for plotting
+missing_counts_long <- tidyr::pivot_longer(missing_counts, everything(), names_to = "Variable", values_to = "Missing_Count")
+
+# Create the bar plot
+p <- ggplot(missing_counts_long, aes(x = Variable, y = Missing_Count, fill = Variable)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Variable", y = "Missing Count", title = "Number of Missing Values by Variable") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+print(p)
 
 ```
 
+```{r}
+head(cleandata)
+```
+
+
+
 # Outlier
 ```{r}
-# Identify the numeric independent variables
-numeric_vars <- names(data)[sapply(data, is.numeric)]
 
-# Remove rows with missing values
-data_complete <- na.omit(data)
-
-# Create a box plot for each independent variable
-for (var in numeric_vars) {
-  p <- ggplot(data_complete, aes(x = Diagnosis, y = data_complete[[var]])) +
+# Create box plot for each variable
+for (var in names(cleandata)) {
+  p <- ggplot(cleandata, aes(x = 1, y = cleandata[[var]])) +
     geom_boxplot(fill = "lightblue", color = "black") +
-    labs(x = "Diagnosis", y = var, title = paste("Box Plot of", var, "by Diagnosis")) +
-    theme_minimal()
+    labs(x = "", y = var, title = paste("Box Plot of", var)) +
+    theme_minimal() +
+    theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
   print(p)
 }
 ```
 
 
 ```{r}
-# Identify the numeric independent variables
-numeric_vars <- names(data)[sapply(data, is.numeric)]
+# Assign independent variables
+independent_vars <- names(cleandata)[names(cleandata) != "Diagnosis"]
 
-# Find outliers using the IQR rule
-outliers <- lapply(data[numeric_vars], function(var) {
-  Q1 <- quantile(var, 0.25, na.rm = TRUE)
-  Q3 <- quantile(var, 0.75, na.rm = TRUE)
-  IQR <- Q3 - Q1
-  lower_bound <- Q1 - 1.5 * IQR
-  upper_bound <- Q3 + 1.5 * IQR
-  outliers <- var[var < lower_bound | var > upper_bound]
-  return(outliers)
+# Calculate the IQR for each independent variable
+iqr_values <- apply(cleandata[, independent_vars], 2, IQR)
+
+# Find the lower and upper bounds for outliers
+lower_bounds <- apply(cleandata[, independent_vars], 2, function(x) quantile(x, 0.25) - 1.5 * IQR(x))
+upper_bounds <- apply(cleandata[, independent_vars], 2, function(x) quantile(x, 0.75) + 1.5 * IQR(x))
+
+# Identify the outliers for each variable
+outliers <- lapply(seq_along(independent_vars), function(i) {
+  outliers <- which(cleandata[, independent_vars[i]] < lower_bounds[i] | cleandata[, independent_vars[i]] > upper_bounds[i])
+  if (length(outliers) > 0) {
+    data.frame(Variable = independent_vars[i], Outlier_Value = cleandata[outliers, independent_vars[i]])
+  } else {
+    NULL
+  }
 })
 
-# Print the outliers for each variable
-for (i in 1:length(numeric_vars)) {
-  var <- numeric_vars[i]
-  if (length(outliers[[i]]) > 0) {
-    cat("Outliers for", var, ":\n")
-    print(outliers[[i]])
-    cat("\n")
-  } else {
-    cat("No outliers found for", var, "\n\n")
-  }
-}
+# Combine the outliers into a single data frame
+outliers_df <- do.call(rbind, outliers)
+
+outliers_df
 ```
 
 
 ## Replace Outlier
+
+Robust Statistical Methods: Robust statistical methods, such as robust regression or robust estimators, can handle outliers more effectively by downweighting their influence in the analysis. These methods are less sensitive to extreme values and can provide more reliable estimates.
+
+Winsorization: Winsorization replaces extreme values with values closer to the rest of the data. Instead of removing the outliers completely, you can replace them with a trimmed or truncated value at a certain percentile. This approach retains the overall distribution shape while reducing the impact of outliers
+
 ```{r}
+# Apply Winsorization to replace outliers in selected variables
+selected_vars <- c("Pregnancies", "BloodPressure", "BMI", "Insulin", "SkinThickness", "Pedigree")
+
+winsorize <- function(x, trim = 0.05) {
+  q <- quantile(x, probs = c(trim, 1 - trim), na.rm = TRUE)
+  x[x < q[1]] <- q[1]
+  x[x > q[2]] <- q[2]
+  x
+}
+
+for (var in selected_vars) {
+  cleandata[, var] <- winsorize(cleandata[, var])
+}
+```
+
+
+### Box plot After replacement
+
+```{r}
+# Create box plot for each variable
+for (var in names(cleandata)) {
+  p <- ggplot(cleandata, aes(x = 1, y = cleandata[[var]])) +
+    geom_boxplot(fill = "lightblue", color = "black") +
+    labs(x = "", y = var, title = paste("Box Plot of", var)) +
+    theme_minimal() +
+    theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
+  print(p)
+}
+
+```
+
+
+
+# Select Varaible
+```{r}
+# Calculate the correlation matrix
+cor_matrix <- cor(cleandata)
+
+# Create a correlogram using a heatmap
+
+corrplot(cor_matrix, method = "color", type = "upper", tl.cex = 0.7)
+
+
+```
+
+Glucose has the strongest correlation with the Diagnosis
+
+There is also posisbilities of multicoloniarity between Preagnancies and Age
+and between Insulin and skinthcikness
+
+# Standarization
+Standardizing features to a Gaussian distribution can be a good idea for several reasons:
+
+Equalize the scales: Standardizing the features ensures that they are on a comparable scale. This is important when working with algorithms that are sensitive to the scale of the variables. Standardization prevents features with larger scales from dominating the algorithm and helps to ensure fair comparisons between different features.
+
+Facilitate model convergence: Many machine learning algorithms, such as linear regression and neural networks, rely on optimization techniques that assume the input features are normally distributed or have a similar scale. Standardizing the features can improve the convergence of these algorithms and help them find the optimal solution more efficiently.
+
+Interpretability and comparability: When features are standardized, their values are transformed to a common scale, making them more interpretable and comparable. The standardized values represent the number of standard deviations the original values are from the mean. This allows for easier interpretation and understanding of the relative importance and impact of each feature on the model.
+
+Reduce the influence of outliers: Standardization can help mitigate the impact of outliers on the model. By transforming the features to a Gaussian distribution, extreme values (outliers) are scaled to a smaller range and have less influence on the model's behavior. This can lead to more robust and stable model performance.
+
+Improve feature importance estimation: Standardization helps to provide a fair estimation of feature importance or feature contribution in models that use regularization techniques or rely on feature weights. It ensures that the importance or weights are not biased by the original scale of the features.
+
+Overall, standardizing features to a Gaussian distribution is a common practice in data preprocessing to improve the performance, stability, and interpretability of machine learning models. It helps to address issues related to feature scales, convergence, interpretability, outliers, and fair comparison between features.
+
+
+```{r}
+standdata <- cleandata
+
+# Select the independent variables
+independent_vars <- names(cleandata)[names(cleandata) != "Diagnosis"]
+
+# Standardize the independent variables using Gaussian distribution
+stand_data <- as.data.frame(scale(cleandata[, independent_vars]))
+
+standdata[, independent_vars] <- stand_data
+head(standdata, 10)
+```
+```{r}
+summary(standdata)
 
 ```
 
 
 ```{r}
+# Load the required library
+library(glmnet)
 
+# Create the formula for logistic regression
+formula <- as.formula("Diagnosis ~ .")
+
+# Fit the logistic regression model
+LRM1 <- glm(formula, data = standdata, family = "binomial")
+
+summary(LRM1)
+```
+
+```{r}
+# Predict using the model
+predictions <- predict(LRM1, newdata = standdata, type = "response")
+
+# Convert predicted probabilities to class labels (0 or 1)
+predicted_classes <- ifelse(predictions > 0.5, 1, 0)
+
+# Convert predicted_classes and standdata$Diagnosis to factors with the same levels
+predicted_classes <- factor(predicted_classes, levels = c(0, 1))
+standdata$Diagnosis <- factor(standdata$Diagnosis, levels = c(0, 1))
+
+# Create a confusion matrix
+confusion_matrix <- confusionMatrix(predicted_classes, standdata$Diagnosis)
+
+# Calculate accuracy
+accuracy <- confusion_matrix$overall['Accuracy']
+
+# Print the accuracy
+print(accuracy)
 
 ```
 
 
 
 
+# Anova
+```{r}
+# Fit a logistic regression model
+LRM1 <- glm(Diagnosis ~ ., data = standdata, family = "binomial")
+
+# Obtain the p-values for each predictor variable
+p_values <- summary(LRM1)$coefficients[-1, "Pr(>|z|)"]
+
+# Adjust the p-values for multiple comparisons
+adjusted_p_values <- p.adjust(p_values, method = "holm")
+
+# Create a data frame with variable names and adjusted p-values
+anova_results <- data.frame(variable = colnames(standdata)[-ncol(standdata)],
+                            p_value = adjusted_p_values)
+
+# Filter significant predictors based on a significance threshold (e.g., 0.05)
+significant_predictors <- subset(anova_results, p_value < 0.05)
+
+# Print the significant predictors
+print(significant_predictors)
+
+```
 
 
+```{r}
+# Fit a logistic regression model with selected predictors
+LRM2 <- glm(Diagnosis ~ Pregnancies + Glucose + BMI + Pedigree, data = standdata, family = "binomial")
+
+# Print the summary of the model
+summary(LRM2)
 
 
+```
+```{r}
+# Predict using the model
+predicted_classes <- ifelse(predict(LRM2, newdata = standdata, type = "response") > 0.5, 1, 0)
 
 
+# Create a confusion matrix
+confusion_matrix <- table(predicted_classes, standdata$Diagnosis)
 
+# Calculate accuracy
+accuracy <- sum(diag(confusion_matrix)) / sum(confusion_matrix)
 
+# Print the confusion matrix and accuracy
+print(confusion_matrix)
+print(paste("Accuracy:", accuracy))
 
-
-
-
-
-
-
+```
 
 
