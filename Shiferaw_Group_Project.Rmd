@@ -1,0 +1,127 @@
+---
+title: "Shiferaw_Final_Project"
+author: "Maria Shiferaw"
+date: "2023-05-29"
+output: html_document
+---
+
+```{r}
+library(dplyr)
+library(ggplot2)
+data <- read.csv("patients.csv")
+head(data)
+tail(data)
+data_dimension <- dim(data)
+print(data_dimension)
+```
+
+**Explanation for abnormal or interesting findings**
+
+```{r}
+summary(data)
+data_subset <- data[, -ncol(data)]
+
+summary_stats <- apply(data_subset, 2, function(x) c(mean = mean(x), median = median(x), sd = sd(x), IQR = IQR(x), Quartiles = quantile(x, probs = c(0.25, 0.75))))
+
+print(summary_stats)
+```
+
+**Create graphs for pregnancies, Glucose, BloodPressure, Insulin, and Age**
+
+```{r}
+# Create the box plot of insulin
+plot <- ggplot(data, aes(x = "", y = Insulin, fill = "Insulin")) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(x = "", y = "Insulin") +
+  scale_fill_manual(values = c("#fbb4ae"))  
+
+# Display the plot
+print(plot)
+```
+
+Scatter plot of x-axis to be Glucose and y-axis to be Insulin
+```{r}
+# Create the scatter plot
+plot <- ggplot(data, aes(x = Glucose, y = Insulin, color = "Data Points")) + geom_point() + theme_minimal() + labs(x = "Glucose", y = "Insulin") + scale_color_manual(values = c("#a6cee3")) 
+
+# Display the plot
+print(plot)
+```
+
+Bar graph of pregnancy
+```{r}
+# Create the bar graph with appealing colors
+plot <- ggplot(data, aes(x = Pregnancies)) +
+  geom_bar(fill = "#e78ac3") +
+  theme_minimal() +
+  labs(x = "Pregnancy", y = "Count") +
+  scale_fill_manual(values = c("#e78ac3"))  # Set the desired color(s) for the bars
+
+# Display the plot
+print(plot)
+```
+**Need to add 2 more graphs**
+
+
+```{r}
+missing_val <- colSums(data == 0)
+print(missing_val)
+
+# Replace missing values (0) with the median for each column except the last column
+for (col in names(data)[-ncol(data)]) {
+  data[data[, col] == 0, col] <- median(data[data[, col] != 0, col], na.rm = TRUE)
+}
+head(data)
+```
+
+**Find the outliers of each column**
+```{r}
+for (col in names(data)) {
+  # Calculate the IQR for the column
+  q1 <- quantile(data[, col], 0.25, na.rm = TRUE)
+  q3 <- quantile(data[, col], 0.75, na.rm = TRUE)
+  iqr <- q3 - q1
+
+  # Define the lower and upper bounds for outliers
+  lower_bound <- q1 - 1.5 * iqr
+  upper_bound <- q3 + 1.5 * iqr
+
+  # Identify outliers in the column
+  outliers <- data[data[, col] < lower_bound | data[, col] > upper_bound, col]
+
+  # Print the column name and outliers
+  if (length(outliers) > 0) {
+    cat("Column:", col, "\n")
+    cat("Outliers:", outliers, "\n\n")
+  }
+}
+```
+
+**Replace the outliers with the median**
+```{r}
+for (col in names(data)) {
+  # Calculate the IQR for the column
+  q1 <- quantile(data[, col], 0.25, na.rm = TRUE)
+  q3 <- quantile(data[, col], 0.75, na.rm = TRUE)
+  iqr <- q3 - q1
+
+  # Define the lower and upper bounds for outliers
+  lower_bound <- q1 - 1.5 * iqr
+  upper_bound <- q3 + 1.5 * iqr
+
+  # Replace outliers in the column with the column's median
+  data[data[, col] < lower_bound | data[, col] > upper_bound, col] <- median(data[, col], na.rm = TRUE)
+}
+head(data)
+```
+
+**Find the best performing variables using correlogram**
+```{r}
+library(corrplot)
+# Calculate the correlation matrix
+cor_matrix <- cor(data)
+
+# Generate the correlogram plot
+corrplot(cor_matrix, type = "upper", method = "circle", tl.col = "black")
+```
