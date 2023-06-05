@@ -1,0 +1,1238 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={gestational\_diabetes},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{gestational\_diabetes}
+\author{}
+\date{\vspace{-2.5em}2023-05-23}
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#install.packages("caret")}
+\end{Highlighting}
+\end{Shaded}
+
+\#Library
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(ggplot2)}
+\FunctionTok{library}\NormalTok{(dplyr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'dplyr'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(gridExtra)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'gridExtra'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:dplyr':
+## 
+##     combine
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(naniar)}
+\FunctionTok{library}\NormalTok{(visdat)}
+\FunctionTok{library}\NormalTok{(corrplot)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## corrplot 0.92 loaded
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(caret)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: lattice
+\end{verbatim}
+
+\#Data
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\FunctionTok{url}\NormalTok{(}\StringTok{"https://raw.githubusercontent.com/Marchosh/gestational\_diabetes/master/patients.csv?token=GHSAT0AAAAAACC7K4VFNJCC5HTZ23CRGRBAZDMELKA"}\NormalTok{))}
+\FunctionTok{head}\NormalTok{(data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   Pregnancies Glucose BloodPressure SkinThickness Insulin  BMI Pedigree Age
+## 1           6     148            72            35       0 33.6    0.627  50
+## 2           1      85            66            29       0 26.6    0.351  31
+## 3           8     183            64             0       0 23.3    0.672  32
+## 4           1      89            66            23      94 28.1    0.167  21
+## 5           0     137            40            35     168 43.1    2.288  33
+## 6           5     116            74             0       0 25.6    0.201  30
+##   Diagnosis
+## 1         1
+## 2         0
+## 3         1
+## 4         0
+## 5         1
+## 6         0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   Pregnancies        Glucose      BloodPressure    SkinThickness  
+##  Min.   : 0.000   Min.   :  0.0   Min.   :  0.00   Min.   : 0.00  
+##  1st Qu.: 1.000   1st Qu.: 99.0   1st Qu.: 62.00   1st Qu.: 0.00  
+##  Median : 3.000   Median :117.0   Median : 72.00   Median :23.00  
+##  Mean   : 3.845   Mean   :120.9   Mean   : 69.11   Mean   :20.54  
+##  3rd Qu.: 6.000   3rd Qu.:140.2   3rd Qu.: 80.00   3rd Qu.:32.00  
+##  Max.   :17.000   Max.   :199.0   Max.   :122.00   Max.   :99.00  
+##     Insulin           BMI           Pedigree           Age       
+##  Min.   :  0.0   Min.   : 0.00   Min.   :0.0780   Min.   :21.00  
+##  1st Qu.:  0.0   1st Qu.:27.30   1st Qu.:0.2437   1st Qu.:24.00  
+##  Median : 30.5   Median :32.00   Median :0.3725   Median :29.00  
+##  Mean   : 79.8   Mean   :31.99   Mean   :0.4719   Mean   :33.24  
+##  3rd Qu.:127.2   3rd Qu.:36.60   3rd Qu.:0.6262   3rd Qu.:41.00  
+##  Max.   :846.0   Max.   :67.10   Max.   :2.4200   Max.   :81.00  
+##    Diagnosis    
+##  Min.   :0.000  
+##  1st Qu.:0.000  
+##  Median :0.000  
+##  Mean   :0.349  
+##  3rd Qu.:1.000  
+##  Max.   :1.000
+\end{verbatim}
+
+Pregnancies: The range of the number of pregnancies is from 0 to 17,
+with a median of 3 and a mean of approximately 3.845. The majority of
+individuals (75\%) had 6 or fewer pregnancies (as indicated by the third
+quartile).
+
+Glucose: The minimum glucose level observed is 0, which seems unusual
+and may indicate missing or invalid data. The range of glucose levels is
+from 0 to 199, with a median of 117 and a mean of approximately 120.9.
+The majority of glucose levels (75\%) fall below 140.2 (as indicated by
+the third quartile).
+
+BloodPressure: The range of diastolic blood pressure values is from 0 to
+122, with a median of 72 and a mean of approximately 69.11. The majority
+of blood pressure readings (75\%) are below 80 (as indicated by the
+third quartile).
+
+SkinThickness: The range of triceps skinfold thickness values is from 0
+to 99, with a median of 23 and a mean of approximately 20.54. The
+majority of skinfold thickness measurements (75\%) are below 32 (as
+indicated by the third quartile).
+
+Insulin: The range of serum insulin levels is from 0 to 846, with a
+median of 30.5 and a mean of approximately 79.8. The majority of insulin
+levels (75\%) are below 127.2 (as indicated by the third quartile).
+
+BMI: The range of body mass index (BMI) values is from 0 to 67.1, with a
+median of 32 and a mean of approximately 31.99. The majority of
+individuals (75\%) have a BMI below 36.6 (as indicated by the third
+quartile).
+
+Pedigree: The range of diabetes pedigree function values is from 0.0780
+to 2.4200, with a median of 0.3725 and a mean of approximately 0.4719.
+The majority of pedigree function values (75\%) fall below 0.6262 (as
+indicated by the third quartile).
+
+Age: The range of ages in the dataset is from 21 to 81, with a median of
+29 and a mean of approximately 33.24. The majority of individuals (75\%)
+are below 41 years old (as indicated by the third quartile).
+
+Diagnosis: The diagnosis variable is binary, with 0 representing a
+negative diagnosis (no diabetes) and 1 representing a positive diagnosis
+(diabetes). Approximately 34.9\% of the cases in the dataset are
+diagnosed with diabetes, as indicated by the mean.
+
+\hypertarget{eda}{%
+\section{EDA}\label{eda}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Bar plot of Diagnosis}
+\FunctionTok{ggplot}\NormalTok{(data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \FunctionTok{factor}\NormalTok{(Diagnosis))) }\SpecialCharTok{+}
+  \FunctionTok{geom\_bar}\NormalTok{(}\AttributeTok{fill =} \StringTok{"lightblue"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"Diagnosis"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Count"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Diagnosis"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-5-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Exclude non{-}numeric variables}
+\NormalTok{vars }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(data)[}\FunctionTok{sapply}\NormalTok{(data, is.numeric)]}
+
+\CommentTok{\# Loop through the variables and create scatter plots}
+\ControlFlowTok{for}\NormalTok{ (var }\ControlFlowTok{in}\NormalTok{ vars) \{}
+\NormalTok{  plot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ .data[[var]], }\AttributeTok{y =}\NormalTok{ Diagnosis, }\AttributeTok{color =} \FunctionTok{as.factor}\NormalTok{(Diagnosis))) }\SpecialCharTok{+}
+    \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+    \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =}\NormalTok{ var, }\AttributeTok{y =} \StringTok{"Diagnosis"}\NormalTok{, }\AttributeTok{color =} \StringTok{"Diagnosis"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{ggtitle}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{"Scatter Plot of"}\NormalTok{, var, }\StringTok{"against Diagnosis"}\NormalTok{)) }\SpecialCharTok{+}
+    \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"bottom"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{scale\_color\_brewer}\NormalTok{(}\AttributeTok{palette =} \StringTok{"Set1"}\NormalTok{)}
+  
+  \FunctionTok{print}\NormalTok{(plot)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-6-1.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-6-2.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-6-3.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-6-4.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-6-5.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-6-6.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-6-7.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-6-8.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-6-9.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Exclude non{-}numeric variables and the "Diagnosis" column}
+\NormalTok{vars }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(data)[}\SpecialCharTok{!}\FunctionTok{sapply}\NormalTok{(data, is.factor)]}
+\NormalTok{vars }\OtherTok{\textless{}{-}}\NormalTok{ vars[vars }\SpecialCharTok{!=} \StringTok{"Diagnosis"}\NormalTok{]}
+
+\CommentTok{\# Create a list to store the plots}
+\NormalTok{plots }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{()}
+
+\CommentTok{\# Loop through the variables and create box plots}
+\ControlFlowTok{for}\NormalTok{ (var }\ControlFlowTok{in}\NormalTok{ vars) \{}
+\NormalTok{  plot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \FunctionTok{as.factor}\NormalTok{(Diagnosis), }\AttributeTok{y =}\NormalTok{ .data[[var]], }\AttributeTok{fill =} \FunctionTok{as.factor}\NormalTok{(Diagnosis))) }\SpecialCharTok{+}
+    \FunctionTok{geom\_boxplot}\NormalTok{() }\SpecialCharTok{+}
+    \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"Diagnosis"}\NormalTok{, }\AttributeTok{y =}\NormalTok{ var, }\AttributeTok{fill =} \StringTok{"Diagnosis"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{ggtitle}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{"Box Plot of"}\NormalTok{, var, }\StringTok{"by Diagnosis"}\NormalTok{)) }\SpecialCharTok{+}
+    \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"bottom"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{scale\_fill\_brewer}\NormalTok{(}\AttributeTok{palette =} \StringTok{"Set1"}\NormalTok{)}
+  
+\NormalTok{  plots[[var]] }\OtherTok{\textless{}{-}}\NormalTok{ plot}
+\NormalTok{\}}
+
+\CommentTok{\# Display the plots}
+\ControlFlowTok{for}\NormalTok{ (plot }\ControlFlowTok{in}\NormalTok{ plots) \{}
+  \FunctionTok{print}\NormalTok{(plot)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-7-1.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-7-2.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-7-3.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-7-4.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-7-5.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-7-6.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-7-7.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-7-8.pdf}
+\#\# histogram
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Create histograms for each variable}
+\NormalTok{numeric\_vars }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(data)[}\FunctionTok{sapply}\NormalTok{(data, is.numeric)]}
+\ControlFlowTok{for}\NormalTok{ (var }\ControlFlowTok{in}\NormalTok{ numeric\_vars) \{}
+\NormalTok{  p }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ .data[[var]])) }\SpecialCharTok{+}
+    \FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{binwidth =} \DecValTok{5}\NormalTok{, }\AttributeTok{fill =} \StringTok{"lightblue"}\NormalTok{, }\AttributeTok{color =} \StringTok{"black"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =}\NormalTok{ var, }\AttributeTok{y =} \StringTok{"Frequency"}\NormalTok{, }\AttributeTok{title =} \FunctionTok{paste}\NormalTok{(}\StringTok{"Histogram of"}\NormalTok{, var)) }\SpecialCharTok{+}
+    \FunctionTok{theme\_minimal}\NormalTok{()}
+  
+  \FunctionTok{print}\NormalTok{(p)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-8-1.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-8-2.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-8-3.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-8-4.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-8-5.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-8-6.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-8-7.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-8-8.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-8-9.pdf}
+Pregnancies:
+
+Glucose: there is zero value which missing value mostlikely
+
+Blood Preasue: there si possibility of missing value in the blood
+preaseure since 0 is present
+
+Skin thickness: missing value 0
+
+Insulin: hug spike in 0 must be investivigated
+
+BMI: 0 porbabluy missing value
+
+Pedigree: all equal, need to be investivigated
+
+AGE: seem some outlier with women over 60
+
+Diagnosis: Binary
+
+\hypertarget{violin-plot}{%
+\subsection{violin plot}\label{violin-plot}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Create violin plots for each variable}
+\NormalTok{numeric\_vars }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(data)[}\FunctionTok{sapply}\NormalTok{(data, is.numeric)]}
+\ControlFlowTok{for}\NormalTok{ (var }\ControlFlowTok{in}\NormalTok{ numeric\_vars) \{}
+\NormalTok{  p }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \FunctionTok{as.factor}\NormalTok{(Diagnosis), }\AttributeTok{y =}\NormalTok{ .data[[var]], }\AttributeTok{fill =} \FunctionTok{as.factor}\NormalTok{(Diagnosis))) }\SpecialCharTok{+}
+    \FunctionTok{geom\_violin}\NormalTok{(}\AttributeTok{trim =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{scale =} \StringTok{"width"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"Diagnosis"}\NormalTok{, }\AttributeTok{y =}\NormalTok{ var, }\AttributeTok{title =} \FunctionTok{paste}\NormalTok{(}\StringTok{"Violin Plot of"}\NormalTok{, var, }\StringTok{"by Diagnosis"}\NormalTok{)) }\SpecialCharTok{+}
+    \FunctionTok{theme\_minimal}\NormalTok{()}
+  
+  \FunctionTok{print}\NormalTok{(p)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-9-1.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-9-2.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-9-3.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-9-4.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-9-5.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-9-6.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-9-7.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-9-8.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-9-9.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Create density plots for each variable}
+\NormalTok{numeric\_vars }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(data)[}\FunctionTok{sapply}\NormalTok{(data, is.numeric)]}
+\ControlFlowTok{for}\NormalTok{ (var }\ControlFlowTok{in}\NormalTok{ numeric\_vars) \{}
+\NormalTok{  p }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ .data[[var]], }\AttributeTok{fill =} \FunctionTok{as.factor}\NormalTok{(Diagnosis))) }\SpecialCharTok{+}
+    \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =}\NormalTok{ var, }\AttributeTok{y =} \StringTok{"Density"}\NormalTok{, }\AttributeTok{title =} \FunctionTok{paste}\NormalTok{(}\StringTok{"Density Plot of"}\NormalTok{, var, }\StringTok{"by Diagnosis"}\NormalTok{)) }\SpecialCharTok{+}
+    \FunctionTok{theme\_minimal}\NormalTok{()}
+  \FunctionTok{print}\NormalTok{(p)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-10-1.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-10-2.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-10-3.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-10-4.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-10-5.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-10-6.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-10-7.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-10-8.pdf}
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-10-9.pdf}
+
+\hypertarget{missing-value}{%
+\section{missing value}\label{missing-value}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Calculate the missing values}
+\NormalTok{missing\_data  }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(data))}
+
+\CommentTok{\# Create a bar plot of missing values}
+\FunctionTok{barplot}\NormalTok{(missing\_data , }\AttributeTok{xlab =} \StringTok{"Variables"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Missing Values"}\NormalTok{, }\AttributeTok{main =} \StringTok{"Missing Values by Variable"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-11-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Calculate the number of missing values for each variable}
+\NormalTok{missing\_counts }\OtherTok{\textless{}{-}}\NormalTok{ data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise\_all}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(.) }\SpecialCharTok{|}\NormalTok{ . }\SpecialCharTok{==} \DecValTok{0}\NormalTok{))}
+
+\CommentTok{\# Convert missing\_counts to long format for plotting}
+\NormalTok{missing\_counts\_long }\OtherTok{\textless{}{-}}\NormalTok{ tidyr}\SpecialCharTok{::}\FunctionTok{pivot\_longer}\NormalTok{(missing\_counts, }\FunctionTok{everything}\NormalTok{(), }\AttributeTok{names\_to =} \StringTok{"Variable"}\NormalTok{, }\AttributeTok{values\_to =} \StringTok{"Missing\_Count"}\NormalTok{)}
+
+\CommentTok{\# Create the bar plot}
+\NormalTok{p }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(missing\_counts\_long, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Variable, }\AttributeTok{y =}\NormalTok{ Missing\_Count, }\AttributeTok{fill =}\NormalTok{ Variable)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_bar}\NormalTok{(}\AttributeTok{stat =} \StringTok{"identity"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"Variable"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Missing Count"}\NormalTok{, }\AttributeTok{title =} \StringTok{"Number of Missing Values by Variable"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text.x =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{angle =} \DecValTok{45}\NormalTok{, }\AttributeTok{hjust =} \DecValTok{1}\NormalTok{))}
+
+\FunctionTok{print}\NormalTok{(p)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-12-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Create a new dataframe called missdata}
+\NormalTok{missdata }\OtherTok{\textless{}{-}}\NormalTok{ data}
+
+\CommentTok{\# Replace 0 with NA for missing values in missdata}
+\NormalTok{missdata[missdata }\SpecialCharTok{==} \DecValTok{0}\NormalTok{] }\OtherTok{\textless{}{-}} \ConstantTok{NA}
+
+\CommentTok{\# Plot the modified missing values heatmap}
+\FunctionTok{vis\_miss}\NormalTok{(missdata)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-13-1.pdf}
+
+Diagnosis 0 is category so is not mising value, THe insulin 0 is need to
+be investivigate wheter is it true 0 or missing value beacsue 49\% of
+them is 0 Same goes fro skin thcikness, wheter is it true 0 or missing
+value becaseu contain 30\% For the preganancies 0 it could indicate they
+never pregnant and not missing value But the other (Glucose,
+BloodPreassure, and BMi) variable 0 is mostlikely missing value.
+
+We can see straight long line continous from one oclumn to other it
+showed that, when 1 of the column missing the other column are also
+likely to be missing
+
+\hypertarget{replace-missing-value-0-in-glucose-bloodpreassure-and-bmi}{%
+\subsection{Replace missing value (0) in (Glucose, BloodPreassure, and
+BMi)}\label{replace-missing-value-0-in-glucose-bloodpreassure-and-bmi}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cleandata }\OtherTok{\textless{}{-}}\NormalTok{ data}
+
+\CommentTok{\# Calculate the median values}
+\NormalTok{median\_glucose }\OtherTok{\textless{}{-}} \FunctionTok{median}\NormalTok{(cleandata}\SpecialCharTok{$}\NormalTok{Glucose, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{median\_bp }\OtherTok{\textless{}{-}} \FunctionTok{median}\NormalTok{(cleandata}\SpecialCharTok{$}\NormalTok{BloodPressure, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{median\_bmi }\OtherTok{\textless{}{-}} \FunctionTok{median}\NormalTok{(cleandata}\SpecialCharTok{$}\NormalTok{BMI, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+
+\CommentTok{\# Replace 0 with median in Glucose column}
+\NormalTok{cleandata}\SpecialCharTok{$}\NormalTok{Glucose }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(cleandata}\SpecialCharTok{$}\NormalTok{Glucose }\SpecialCharTok{==} \DecValTok{0}\NormalTok{, median\_glucose, cleandata}\SpecialCharTok{$}\NormalTok{Glucose)}
+
+\CommentTok{\# Replace 0 with median in BloodPressure column}
+\NormalTok{cleandata}\SpecialCharTok{$}\NormalTok{BloodPressure }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(cleandata}\SpecialCharTok{$}\NormalTok{BloodPressure }\SpecialCharTok{==} \DecValTok{0}\NormalTok{, median\_bp, cleandata}\SpecialCharTok{$}\NormalTok{BloodPressure)}
+
+\CommentTok{\# Replace 0 with median in BMI column}
+\NormalTok{cleandata}\SpecialCharTok{$}\NormalTok{BMI }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(cleandata}\SpecialCharTok{$}\NormalTok{BMI }\SpecialCharTok{==} \DecValTok{0}\NormalTok{, median\_bmi, cleandata}\SpecialCharTok{$}\NormalTok{BMI)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Calculate the number of missing values for each variable}
+\NormalTok{missing\_counts }\OtherTok{\textless{}{-}}\NormalTok{ cleandata }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise\_all}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(.) }\SpecialCharTok{|}\NormalTok{ . }\SpecialCharTok{==} \DecValTok{0}\NormalTok{))}
+
+\CommentTok{\# Convert missing\_counts to long format for plotting}
+\NormalTok{missing\_counts\_long }\OtherTok{\textless{}{-}}\NormalTok{ tidyr}\SpecialCharTok{::}\FunctionTok{pivot\_longer}\NormalTok{(missing\_counts, }\FunctionTok{everything}\NormalTok{(), }\AttributeTok{names\_to =} \StringTok{"Variable"}\NormalTok{, }\AttributeTok{values\_to =} \StringTok{"Missing\_Count"}\NormalTok{)}
+
+\CommentTok{\# Create the bar plot}
+\NormalTok{p }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(missing\_counts\_long, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Variable, }\AttributeTok{y =}\NormalTok{ Missing\_Count, }\AttributeTok{fill =}\NormalTok{ Variable)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_bar}\NormalTok{(}\AttributeTok{stat =} \StringTok{"identity"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"Variable"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Missing Count"}\NormalTok{, }\AttributeTok{title =} \StringTok{"Number of Missing Values by Variable"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text.x =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{angle =} \DecValTok{45}\NormalTok{, }\AttributeTok{hjust =} \DecValTok{1}\NormalTok{))}
+
+\FunctionTok{print}\NormalTok{(p)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-15-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{head}\NormalTok{(cleandata)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   Pregnancies Glucose BloodPressure SkinThickness Insulin  BMI Pedigree Age
+## 1           6     148            72            35       0 33.6    0.627  50
+## 2           1      85            66            29       0 26.6    0.351  31
+## 3           8     183            64             0       0 23.3    0.672  32
+## 4           1      89            66            23      94 28.1    0.167  21
+## 5           0     137            40            35     168 43.1    2.288  33
+## 6           5     116            74             0       0 25.6    0.201  30
+##   Diagnosis
+## 1         1
+## 2         0
+## 3         1
+## 4         0
+## 5         1
+## 6         0
+\end{verbatim}
+
+\hypertarget{outlier}{%
+\section{Outlier}\label{outlier}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Create box plot for each variable}
+\ControlFlowTok{for}\NormalTok{ (var }\ControlFlowTok{in} \FunctionTok{names}\NormalTok{(cleandata)) \{}
+\NormalTok{  p }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(cleandata, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \DecValTok{1}\NormalTok{, }\AttributeTok{y =}\NormalTok{ cleandata[[var]])) }\SpecialCharTok{+}
+    \FunctionTok{geom\_boxplot}\NormalTok{(}\AttributeTok{fill =} \StringTok{"lightblue"}\NormalTok{, }\AttributeTok{color =} \StringTok{"black"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{""}\NormalTok{, }\AttributeTok{y =}\NormalTok{ var, }\AttributeTok{title =} \FunctionTok{paste}\NormalTok{(}\StringTok{"Box Plot of"}\NormalTok{, var)) }\SpecialCharTok{+}
+    \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+    \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text.x =} \FunctionTok{element\_blank}\NormalTok{(), }\AttributeTok{axis.ticks.x =} \FunctionTok{element\_blank}\NormalTok{())}
+  \FunctionTok{print}\NormalTok{(p)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Use of `cleandata[[var]]` is discouraged.
+## i Use `.data[[var]]` instead.
+\end{verbatim}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-17-1.pdf}
+
+\begin{verbatim}
+## Warning: Use of `cleandata[[var]]` is discouraged.
+## i Use `.data[[var]]` instead.
+\end{verbatim}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-17-2.pdf}
+
+\begin{verbatim}
+## Warning: Use of `cleandata[[var]]` is discouraged.
+## i Use `.data[[var]]` instead.
+\end{verbatim}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-17-3.pdf}
+
+\begin{verbatim}
+## Warning: Use of `cleandata[[var]]` is discouraged.
+## i Use `.data[[var]]` instead.
+\end{verbatim}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-17-4.pdf}
+
+\begin{verbatim}
+## Warning: Use of `cleandata[[var]]` is discouraged.
+## i Use `.data[[var]]` instead.
+\end{verbatim}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-17-5.pdf}
+
+\begin{verbatim}
+## Warning: Use of `cleandata[[var]]` is discouraged.
+## i Use `.data[[var]]` instead.
+\end{verbatim}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-17-6.pdf}
+
+\begin{verbatim}
+## Warning: Use of `cleandata[[var]]` is discouraged.
+## i Use `.data[[var]]` instead.
+\end{verbatim}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-17-7.pdf}
+
+\begin{verbatim}
+## Warning: Use of `cleandata[[var]]` is discouraged.
+## i Use `.data[[var]]` instead.
+\end{verbatim}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-17-8.pdf}
+
+\begin{verbatim}
+## Warning: Use of `cleandata[[var]]` is discouraged.
+## i Use `.data[[var]]` instead.
+\end{verbatim}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-17-9.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Assign independent variables}
+\NormalTok{independent\_vars }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(cleandata)[}\FunctionTok{names}\NormalTok{(cleandata) }\SpecialCharTok{!=} \StringTok{"Diagnosis"}\NormalTok{]}
+
+\CommentTok{\# Calculate the IQR for each independent variable}
+\NormalTok{iqr\_values }\OtherTok{\textless{}{-}} \FunctionTok{apply}\NormalTok{(cleandata[, independent\_vars], }\DecValTok{2}\NormalTok{, IQR)}
+
+\CommentTok{\# Find the lower and upper bounds for outliers}
+\NormalTok{lower\_bounds }\OtherTok{\textless{}{-}} \FunctionTok{apply}\NormalTok{(cleandata[, independent\_vars], }\DecValTok{2}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{quantile}\NormalTok{(x, }\FloatTok{0.25}\NormalTok{) }\SpecialCharTok{{-}} \FloatTok{1.5} \SpecialCharTok{*} \FunctionTok{IQR}\NormalTok{(x))}
+\NormalTok{upper\_bounds }\OtherTok{\textless{}{-}} \FunctionTok{apply}\NormalTok{(cleandata[, independent\_vars], }\DecValTok{2}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{quantile}\NormalTok{(x, }\FloatTok{0.75}\NormalTok{) }\SpecialCharTok{+} \FloatTok{1.5} \SpecialCharTok{*} \FunctionTok{IQR}\NormalTok{(x))}
+
+\CommentTok{\# Identify the outliers for each variable}
+\NormalTok{outliers }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(}\FunctionTok{seq\_along}\NormalTok{(independent\_vars), }\ControlFlowTok{function}\NormalTok{(i) \{}
+\NormalTok{  outliers }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(cleandata[, independent\_vars[i]] }\SpecialCharTok{\textless{}}\NormalTok{ lower\_bounds[i] }\SpecialCharTok{|}\NormalTok{ cleandata[, independent\_vars[i]] }\SpecialCharTok{\textgreater{}}\NormalTok{ upper\_bounds[i])}
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{length}\NormalTok{(outliers) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{) \{}
+    \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{Variable =}\NormalTok{ independent\_vars[i], }\AttributeTok{Outlier\_Value =}\NormalTok{ cleandata[outliers, independent\_vars[i]])}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+    \ConstantTok{NULL}
+\NormalTok{  \}}
+\NormalTok{\})}
+
+\CommentTok{\# Combine the outliers into a single data frame}
+\NormalTok{outliers\_df }\OtherTok{\textless{}{-}} \FunctionTok{do.call}\NormalTok{(rbind, outliers)}
+
+\NormalTok{outliers\_df}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         Variable Outlier_Value
+## 1    Pregnancies        15.000
+## 2    Pregnancies        17.000
+## 3    Pregnancies        14.000
+## 4    Pregnancies        14.000
+## 5  BloodPressure        30.000
+## 6  BloodPressure       110.000
+## 7  BloodPressure       108.000
+## 8  BloodPressure       122.000
+## 9  BloodPressure        30.000
+## 10 BloodPressure       110.000
+## 11 BloodPressure       108.000
+## 12 BloodPressure       110.000
+## 13 BloodPressure        24.000
+## 14 BloodPressure        38.000
+## 15 BloodPressure       106.000
+## 16 BloodPressure       106.000
+## 17 BloodPressure       106.000
+## 18 BloodPressure       114.000
+## 19 SkinThickness        99.000
+## 20       Insulin       543.000
+## 21       Insulin       846.000
+## 22       Insulin       342.000
+## 23       Insulin       495.000
+## 24       Insulin       325.000
+## 25       Insulin       485.000
+## 26       Insulin       495.000
+## 27       Insulin       478.000
+## 28       Insulin       744.000
+## 29       Insulin       370.000
+## 30       Insulin       680.000
+## 31       Insulin       402.000
+## 32       Insulin       375.000
+## 33       Insulin       545.000
+## 34       Insulin       360.000
+## 35       Insulin       325.000
+## 36       Insulin       465.000
+## 37       Insulin       325.000
+## 38       Insulin       415.000
+## 39       Insulin       579.000
+## 40       Insulin       474.000
+## 41       Insulin       328.000
+## 42       Insulin       480.000
+## 43       Insulin       326.000
+## 44       Insulin       330.000
+## 45       Insulin       600.000
+## 46       Insulin       321.000
+## 47       Insulin       440.000
+## 48       Insulin       540.000
+## 49       Insulin       480.000
+## 50       Insulin       335.000
+## 51       Insulin       387.000
+## 52       Insulin       392.000
+## 53       Insulin       510.000
+## 54           BMI        53.200
+## 55           BMI        55.000
+## 56           BMI        67.100
+## 57           BMI        52.300
+## 58           BMI        52.300
+## 59           BMI        52.900
+## 60           BMI        59.400
+## 61           BMI        57.300
+## 62      Pedigree         2.288
+## 63      Pedigree         1.441
+## 64      Pedigree         1.390
+## 65      Pedigree         1.893
+## 66      Pedigree         1.781
+## 67      Pedigree         1.222
+## 68      Pedigree         1.400
+## 69      Pedigree         1.321
+## 70      Pedigree         1.224
+## 71      Pedigree         2.329
+## 72      Pedigree         1.318
+## 73      Pedigree         1.213
+## 74      Pedigree         1.353
+## 75      Pedigree         1.224
+## 76      Pedigree         1.391
+## 77      Pedigree         1.476
+## 78      Pedigree         2.137
+## 79      Pedigree         1.731
+## 80      Pedigree         1.268
+## 81      Pedigree         1.600
+## 82      Pedigree         2.420
+## 83      Pedigree         1.251
+## 84      Pedigree         1.699
+## 85      Pedigree         1.258
+## 86      Pedigree         1.282
+## 87      Pedigree         1.698
+## 88      Pedigree         1.461
+## 89      Pedigree         1.292
+## 90      Pedigree         1.394
+## 91           Age        69.000
+## 92           Age        67.000
+## 93           Age        72.000
+## 94           Age        81.000
+## 95           Age        67.000
+## 96           Age        67.000
+## 97           Age        70.000
+## 98           Age        68.000
+## 99           Age        69.000
+\end{verbatim}
+
+\hypertarget{replace-outlier}{%
+\subsection{Replace Outlier}\label{replace-outlier}}
+
+Robust Statistical Methods: Robust statistical methods, such as robust
+regression or robust estimators, can handle outliers more effectively by
+downweighting their influence in the analysis. These methods are less
+sensitive to extreme values and can provide more reliable estimates.
+
+Winsorization: Winsorization replaces extreme values with values closer
+to the rest of the data. Instead of removing the outliers completely,
+you can replace them with a trimmed or truncated value at a certain
+percentile. This approach retains the overall distribution shape while
+reducing the impact of outliers
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Apply Winsorization to replace outliers in selected variables}
+\NormalTok{selected\_vars }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"Pregnancies"}\NormalTok{, }\StringTok{"BloodPressure"}\NormalTok{, }\StringTok{"BMI"}\NormalTok{, }\StringTok{"Insulin"}\NormalTok{, }\StringTok{"SkinThickness"}\NormalTok{, }\StringTok{"Pedigree"}\NormalTok{)}
+
+\NormalTok{winsorize }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x, }\AttributeTok{trim =} \FloatTok{0.05}\NormalTok{) \{}
+\NormalTok{  q }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(x, }\AttributeTok{probs =} \FunctionTok{c}\NormalTok{(trim, }\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ trim), }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  x[x }\SpecialCharTok{\textless{}}\NormalTok{ q[}\DecValTok{1}\NormalTok{]] }\OtherTok{\textless{}{-}}\NormalTok{ q[}\DecValTok{1}\NormalTok{]}
+\NormalTok{  x[x }\SpecialCharTok{\textgreater{}}\NormalTok{ q[}\DecValTok{2}\NormalTok{]] }\OtherTok{\textless{}{-}}\NormalTok{ q[}\DecValTok{2}\NormalTok{]}
+\NormalTok{  x}
+\NormalTok{\}}
+
+\ControlFlowTok{for}\NormalTok{ (var }\ControlFlowTok{in}\NormalTok{ selected\_vars) \{}
+\NormalTok{  cleandata[, var] }\OtherTok{\textless{}{-}} \FunctionTok{winsorize}\NormalTok{(cleandata[, var])}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{box-plot-after-replacement}{%
+\subsubsection{Box plot After
+replacement}\label{box-plot-after-replacement}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Create box plot for each variable}
+\ControlFlowTok{for}\NormalTok{ (var }\ControlFlowTok{in} \FunctionTok{names}\NormalTok{(cleandata)) \{}
+\NormalTok{  p }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(cleandata, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \DecValTok{1}\NormalTok{, }\AttributeTok{y =}\NormalTok{ cleandata[[var]])) }\SpecialCharTok{+}
+    \FunctionTok{geom\_boxplot}\NormalTok{(}\AttributeTok{fill =} \StringTok{"lightblue"}\NormalTok{, }\AttributeTok{color =} \StringTok{"black"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{""}\NormalTok{, }\AttributeTok{y =}\NormalTok{ var, }\AttributeTok{title =} \FunctionTok{paste}\NormalTok{(}\StringTok{"Box Plot of"}\NormalTok{, var)) }\SpecialCharTok{+}
+    \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+    \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text.x =} \FunctionTok{element\_blank}\NormalTok{(), }\AttributeTok{axis.ticks.x =} \FunctionTok{element\_blank}\NormalTok{())}
+  \FunctionTok{print}\NormalTok{(p)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Use of `cleandata[[var]]` is discouraged.
+## i Use `.data[[var]]` instead.
+\end{verbatim}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-20-1.pdf}
+
+\begin{verbatim}
+## Warning: Use of `cleandata[[var]]` is discouraged.
+## i Use `.data[[var]]` instead.
+\end{verbatim}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-20-2.pdf}
+
+\begin{verbatim}
+## Warning: Use of `cleandata[[var]]` is discouraged.
+## i Use `.data[[var]]` instead.
+\end{verbatim}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-20-3.pdf}
+
+\begin{verbatim}
+## Warning: Use of `cleandata[[var]]` is discouraged.
+## i Use `.data[[var]]` instead.
+\end{verbatim}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-20-4.pdf}
+
+\begin{verbatim}
+## Warning: Use of `cleandata[[var]]` is discouraged.
+## i Use `.data[[var]]` instead.
+\end{verbatim}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-20-5.pdf}
+
+\begin{verbatim}
+## Warning: Use of `cleandata[[var]]` is discouraged.
+## i Use `.data[[var]]` instead.
+\end{verbatim}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-20-6.pdf}
+
+\begin{verbatim}
+## Warning: Use of `cleandata[[var]]` is discouraged.
+## i Use `.data[[var]]` instead.
+\end{verbatim}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-20-7.pdf}
+
+\begin{verbatim}
+## Warning: Use of `cleandata[[var]]` is discouraged.
+## i Use `.data[[var]]` instead.
+\end{verbatim}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-20-8.pdf}
+
+\begin{verbatim}
+## Warning: Use of `cleandata[[var]]` is discouraged.
+## i Use `.data[[var]]` instead.
+\end{verbatim}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-20-9.pdf}
+
+\hypertarget{select-varaible}{%
+\section{Select Varaible}\label{select-varaible}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Calculate the correlation matrix}
+\NormalTok{cor\_matrix }\OtherTok{\textless{}{-}} \FunctionTok{cor}\NormalTok{(cleandata)}
+
+\CommentTok{\# Create a correlogram using a heatmap}
+
+\FunctionTok{corrplot}\NormalTok{(cor\_matrix, }\AttributeTok{method =} \StringTok{"color"}\NormalTok{, }\AttributeTok{type =} \StringTok{"upper"}\NormalTok{, }\AttributeTok{tl.cex =} \FloatTok{0.7}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Marcho_code_files/figure-latex/unnamed-chunk-21-1.pdf}
+
+Glucose has the strongest correlation with the Diagnosis
+
+There is also posisbilities of multicoloniarity between Preagnancies and
+Age and between Insulin and skinthcikness
+
+\hypertarget{standarization}{%
+\section{Standarization}\label{standarization}}
+
+Standardizing features to a Gaussian distribution can be a good idea for
+several reasons:
+
+Equalize the scales: Standardizing the features ensures that they are on
+a comparable scale. This is important when working with algorithms that
+are sensitive to the scale of the variables. Standardization prevents
+features with larger scales from dominating the algorithm and helps to
+ensure fair comparisons between different features.
+
+Facilitate model convergence: Many machine learning algorithms, such as
+linear regression and neural networks, rely on optimization techniques
+that assume the input features are normally distributed or have a
+similar scale. Standardizing the features can improve the convergence of
+these algorithms and help them find the optimal solution more
+efficiently.
+
+Interpretability and comparability: When features are standardized,
+their values are transformed to a common scale, making them more
+interpretable and comparable. The standardized values represent the
+number of standard deviations the original values are from the mean.
+This allows for easier interpretation and understanding of the relative
+importance and impact of each feature on the model.
+
+Reduce the influence of outliers: Standardization can help mitigate the
+impact of outliers on the model. By transforming the features to a
+Gaussian distribution, extreme values (outliers) are scaled to a smaller
+range and have less influence on the model's behavior. This can lead to
+more robust and stable model performance.
+
+Improve feature importance estimation: Standardization helps to provide
+a fair estimation of feature importance or feature contribution in
+models that use regularization techniques or rely on feature weights. It
+ensures that the importance or weights are not biased by the original
+scale of the features.
+
+Overall, standardizing features to a Gaussian distribution is a common
+practice in data preprocessing to improve the performance, stability,
+and interpretability of machine learning models. It helps to address
+issues related to feature scales, convergence, interpretability,
+outliers, and fair comparison between features.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{standdata }\OtherTok{\textless{}{-}}\NormalTok{ cleandata}
+
+\CommentTok{\# Select the independent variables}
+\NormalTok{independent\_vars }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(cleandata)[}\FunctionTok{names}\NormalTok{(cleandata) }\SpecialCharTok{!=} \StringTok{"Diagnosis"}\NormalTok{]}
+
+\CommentTok{\# Standardize the independent variables using Gaussian distribution}
+\NormalTok{stand\_data }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{scale}\NormalTok{(cleandata[, independent\_vars]))}
+
+\NormalTok{standdata[, independent\_vars] }\OtherTok{\textless{}{-}}\NormalTok{ stand\_data}
+\FunctionTok{head}\NormalTok{(standdata, }\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Pregnancies    Glucose BloodPressure SkinThickness    Insulin         BMI
+## 1    0.7227548  0.8654807   -0.01521132     0.9637061 -0.8000778  0.20589205
+## 2   -0.8778095 -1.2042810   -0.58975036     0.5719667 -0.8000778 -0.92411484
+## 3    1.3629806  2.0153484   -0.78126337    -1.3214403 -0.8000778 -1.45683237
+## 4   -0.8778095 -1.0728676   -0.58975036     0.1802273  0.2378050 -0.68197051
+## 5   -1.1979224  0.5040938   -1.93034145     0.9637061  1.0548617  1.73947282
+## 6    0.4026420 -0.1858268    0.17630169    -1.3214403 -0.8000778 -1.08554439
+## 7   -0.2375838 -1.4342546   -1.93034145     0.7678364  0.1715572 -0.21382480
+## 8    2.0032063 -0.2186802   -0.01521132    -1.3214403 -0.8000778  0.48032229
+## 9   -0.5576966  2.4752954   -0.20672433     1.5513152  2.4350251 -0.29453957
+## 10   1.3629806  0.1098534    1.70840579    -1.3214403 -0.8000778 -0.05239524
+##      Pedigree         Age Diagnosis
+## 1   0.6134911  1.42506672         1
+## 2  -0.3837427 -0.19054773         0
+## 3   0.7760835 -0.10551539         1
+## 4  -1.0485651 -1.04087112         0
+## 5   2.4412109 -0.02048305         1
+## 6  -0.9257175 -0.27558007         0
+## 7  -0.7558987 -0.61570943         1
+## 8  -1.1448560 -0.36061241         0
+## 9  -1.0810836  1.68016374         1
+## 10 -0.8137094  1.76519608         1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(standdata)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   Pregnancies         Glucose        BloodPressure      SkinThickness    
+##  Min.   :-1.1979   Min.   :-2.5513   Min.   :-1.93034   Min.   :-1.3214  
+##  1st Qu.:-0.8778   1st Qu.:-0.7197   1st Qu.:-0.78126   1st Qu.:-1.3214  
+##  Median :-0.2376   Median :-0.1530   Median :-0.01521   Median : 0.1802  
+##  Mean   : 0.0000   Mean   : 0.0000   Mean   : 0.00000   Mean   : 0.0000  
+##  3rd Qu.: 0.7228   3rd Qu.: 0.6109   3rd Qu.: 0.75084   3rd Qu.: 0.7678  
+##  Max.   : 2.0032   Max.   : 2.5410   Max.   : 1.70841   Max.   : 1.5513  
+##     Insulin             BMI             Pedigree            Age         
+##  Min.   :-0.8001   Min.   :-1.6288   Min.   :-1.1449   Min.   :-1.0409  
+##  1st Qu.:-0.8001   1st Qu.:-0.7788   1st Qu.:-0.7713   1st Qu.:-0.7858  
+##  Median :-0.4633   Median :-0.0524   Median :-0.3061   Median :-0.3606  
+##  Mean   : 0.0000   Mean   : 0.0000   Mean   : 0.0000   Mean   : 0.0000  
+##  3rd Qu.: 0.6049   3rd Qu.: 0.6902   3rd Qu.: 0.6108   3rd Qu.: 0.6598  
+##  Max.   : 2.4350   Max.   : 1.9485   Max.   : 2.4412   Max.   : 4.0611  
+##    Diagnosis    
+##  Min.   :0.000  
+##  1st Qu.:0.000  
+##  Median :0.000  
+##  Mean   :0.349  
+##  3rd Qu.:1.000  
+##  Max.   :1.000
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Load the required library}
+\FunctionTok{library}\NormalTok{(glmnet)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: Matrix
+\end{verbatim}
+
+\begin{verbatim}
+## Loaded glmnet 4.1-7
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Create the formula for logistic regression}
+\NormalTok{formula }\OtherTok{\textless{}{-}} \FunctionTok{as.formula}\NormalTok{(}\StringTok{"Diagnosis \textasciitilde{} ."}\NormalTok{)}
+
+\CommentTok{\# Fit the logistic regression model}
+\NormalTok{LRM1 }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(formula, }\AttributeTok{data =}\NormalTok{ standdata, }\AttributeTok{family =} \StringTok{"binomial"}\NormalTok{)}
+
+\FunctionTok{summary}\NormalTok{(LRM1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## glm(formula = formula, family = "binomial", data = standdata)
+## 
+## Coefficients:
+##               Estimate Std. Error z value Pr(>|z|)    
+## (Intercept)   -0.86845    0.09774  -8.885  < 2e-16 ***
+## Pregnancies    0.41873    0.10967   3.818 0.000135 ***
+## Glucose        1.16898    0.11770   9.932  < 2e-16 ***
+## BloodPressure -0.11367    0.10421  -1.091 0.275392    
+## SkinThickness -0.04324    0.11315  -0.382 0.702373    
+## Insulin       -0.14665    0.11304  -1.297 0.194538    
+## BMI            0.67233    0.11179   6.014 1.81e-09 ***
+## Pedigree       0.34842    0.09482   3.675 0.000238 ***
+## Age            0.11990    0.11305   1.061 0.288900    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 993.48  on 767  degrees of freedom
+## Residual deviance: 709.30  on 759  degrees of freedom
+## AIC: 727.3
+## 
+## Number of Fisher Scoring iterations: 5
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Predict using the model}
+\NormalTok{predictions }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(LRM1, }\AttributeTok{newdata =}\NormalTok{ standdata, }\AttributeTok{type =} \StringTok{"response"}\NormalTok{)}
+
+\CommentTok{\# Convert predicted probabilities to class labels (0 or 1)}
+\NormalTok{predicted\_classes }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(predictions }\SpecialCharTok{\textgreater{}} \FloatTok{0.5}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{)}
+
+\CommentTok{\# Convert predicted\_classes and standdata$Diagnosis to factors with the same levels}
+\NormalTok{predicted\_classes }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(predicted\_classes, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+\NormalTok{standdata}\SpecialCharTok{$}\NormalTok{Diagnosis }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(standdata}\SpecialCharTok{$}\NormalTok{Diagnosis, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+
+\CommentTok{\# Create a confusion matrix}
+\NormalTok{confusion\_matrix }\OtherTok{\textless{}{-}} \FunctionTok{confusionMatrix}\NormalTok{(predicted\_classes, standdata}\SpecialCharTok{$}\NormalTok{Diagnosis)}
+
+\CommentTok{\# Calculate accuracy}
+\NormalTok{accuracy }\OtherTok{\textless{}{-}}\NormalTok{ confusion\_matrix}\SpecialCharTok{$}\NormalTok{overall[}\StringTok{\textquotesingle{}Accuracy\textquotesingle{}}\NormalTok{]}
+
+\CommentTok{\# Print the accuracy}
+\FunctionTok{print}\NormalTok{(accuracy)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  Accuracy 
+## 0.7786458
+\end{verbatim}
+
+\hypertarget{anova}{%
+\section{Anova}\label{anova}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Fit a logistic regression model}
+\NormalTok{LRM1 }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(Diagnosis }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ standdata, }\AttributeTok{family =} \StringTok{"binomial"}\NormalTok{)}
+
+\CommentTok{\# Obtain the p{-}values for each predictor variable}
+\NormalTok{p\_values }\OtherTok{\textless{}{-}} \FunctionTok{summary}\NormalTok{(LRM1)}\SpecialCharTok{$}\NormalTok{coefficients[}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\StringTok{"Pr(\textgreater{}|z|)"}\NormalTok{]}
+
+\CommentTok{\# Adjust the p{-}values for multiple comparisons}
+\NormalTok{adjusted\_p\_values }\OtherTok{\textless{}{-}} \FunctionTok{p.adjust}\NormalTok{(p\_values, }\AttributeTok{method =} \StringTok{"holm"}\NormalTok{)}
+
+\CommentTok{\# Create a data frame with variable names and adjusted p{-}values}
+\NormalTok{anova\_results }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{variable =} \FunctionTok{colnames}\NormalTok{(standdata)[}\SpecialCharTok{{-}}\FunctionTok{ncol}\NormalTok{(standdata)],}
+                            \AttributeTok{p\_value =}\NormalTok{ adjusted\_p\_values)}
+
+\CommentTok{\# Filter significant predictors based on a significance threshold (e.g., 0.05)}
+\NormalTok{significant\_predictors }\OtherTok{\textless{}{-}} \FunctionTok{subset}\NormalTok{(anova\_results, p\_value }\SpecialCharTok{\textless{}} \FloatTok{0.05}\NormalTok{)}
+
+\CommentTok{\# Print the significant predictors}
+\FunctionTok{print}\NormalTok{(significant\_predictors)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                variable      p_value
+## Pregnancies Pregnancies 8.073339e-04
+## Glucose         Glucose 2.416752e-22
+## BMI                 BMI 1.265075e-08
+## Pedigree       Pedigree 1.191008e-03
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Fit a logistic regression model with selected predictors}
+\NormalTok{LRM2 }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(Diagnosis }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Pregnancies }\SpecialCharTok{+}\NormalTok{ Glucose }\SpecialCharTok{+}\NormalTok{ BMI }\SpecialCharTok{+}\NormalTok{ Pedigree, }\AttributeTok{data =}\NormalTok{ standdata, }\AttributeTok{family =} \StringTok{"binomial"}\NormalTok{)}
+
+\CommentTok{\# Print the summary of the model}
+\FunctionTok{summary}\NormalTok{(LRM2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## glm(formula = Diagnosis ~ Pregnancies + Glucose + BMI + Pedigree, 
+##     family = "binomial", data = standdata)
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(>|z|)    
+## (Intercept) -0.86277    0.09699  -8.895  < 2e-16 ***
+## Pregnancies  0.48075    0.09270   5.186 2.15e-07 ***
+## Glucose      1.12880    0.10663  10.586  < 2e-16 ***
+## BMI          0.59730    0.09940   6.009 1.86e-09 ***
+## Pedigree     0.32529    0.09284   3.504 0.000459 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 993.48  on 767  degrees of freedom
+## Residual deviance: 714.46  on 763  degrees of freedom
+## AIC: 724.46
+## 
+## Number of Fisher Scoring iterations: 5
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Predict using the model}
+\NormalTok{predicted\_classes }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{predict}\NormalTok{(LRM2, }\AttributeTok{newdata =}\NormalTok{ standdata, }\AttributeTok{type =} \StringTok{"response"}\NormalTok{) }\SpecialCharTok{\textgreater{}} \FloatTok{0.5}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{)}
+
+
+\CommentTok{\# Create a confusion matrix}
+\NormalTok{confusion\_matrix }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(predicted\_classes, standdata}\SpecialCharTok{$}\NormalTok{Diagnosis)}
+
+\CommentTok{\# Calculate accuracy}
+\NormalTok{accuracy }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(confusion\_matrix)) }\SpecialCharTok{/} \FunctionTok{sum}\NormalTok{(confusion\_matrix)}
+
+\CommentTok{\# Print the confusion matrix and accuracy}
+\FunctionTok{print}\NormalTok{(confusion\_matrix)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                  
+## predicted_classes   0   1
+##                 0 439 117
+##                 1  61 151
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{"Accuracy:"}\NormalTok{, accuracy))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Accuracy: 0.768229166666667"
+\end{verbatim}
+
+\end{document}
