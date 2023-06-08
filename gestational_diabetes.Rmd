@@ -229,10 +229,7 @@ But the other (Glucose, BloodPreassure, and BMi) variable 0 is mostlikely missin
 We can see straight long line continous from one oclumn to other it showed that,
 when 1 of the column missing the other column are also likely to be missing
 
-## Remove mssing value
-```{r}
 
-```
 
 # Outlier
 ```{r}
@@ -282,21 +279,173 @@ for (i in 1:length(numeric_vars)) {
 ```
 
 
-## Replace Outlier
+--try this method---
+Robust Statistical Methods: Robust statistical methods, such as robust regression or robust estimators, can handle outliers more effectively by downweighting their influence in the analysis. These methods are less sensitive to extreme values and can provide more reliable estimates.
+
+
+
+Winsorization: Winsorization replaces extreme values with values closer to the rest of the data. Instead of removing the outliers completely, you can replace them with a trimmed or truncated value at a certain percentile. This approach retains the overall distribution shape while reducing the impact of outliers
+
 ```{r}
+# Apply Winsorization to replace outliers in selected variables
+selected_vars <- c("Pregnancies", "BloodPressure", "BMI", "Insulin", "SkinThickness", "Pedigree")
+
+winsorize <- function(x, trim = 0.05) {
+  q <- quantile(x, probs = c(trim, 1 - trim), na.rm = TRUE)
+  x[x < q[1]] <- q[1]
+  x[x > q[2]] <- q[2]
+  x
+}
+
+for (var in selected_vars) {
+  cleandata[, var] <- winsorize(cleandata[, var])
+}
+```
+
+
+### Box plot After replacement
+
+```{r}
+# Create box plot for each variable
+for (var in names(cleandata)) {
+  p <- ggplot(cleandata, aes(x = 1, y = cleandata[[var]])) +
+    geom_boxplot(fill = "lightblue", color = "black") +
+    labs(x = "", y = var, title = paste("Box Plot of", var)) +
+    theme_minimal() +
+    theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
+  print(p)
+}
 
 ```
 
 
+
+# Select Varaible
 ```{r}
+# Calculate the correlation matrix
+cor_matrix <- cor(cleandata)
+
+# Create a correlogram using a heatmap
+
+corrplot(cor_matrix, method = "color", type = "upper", tl.cex = 0.7, addCoef.col = "black")
 
 
 ```
 
+Glucose has the strongest correlation with the Diagnosis
+
+There is also posisbilities of multicoloniarity between Preagnancies and Age
+and between Insulin and skinthcikness
+
+Skinthickness and Insulin is removed since it has great umber of 0
 
 
+# Standarization
+Standardizing features to a Gaussian distribution can be a good idea for several reasons:
+
+Equalize the scales: Standardizing the features ensures that they are on a comparable scale. This is important when working with algorithms that are sensitive to the scale of the variables. Standardization prevents features with larger scales from dominating the algorithm and helps to ensure fair comparisons between different features.
+
+Facilitate model convergence: Many machine learning algorithms, such as linear regression and neural networks, rely on optimization techniques that assume the input features are normally distributed or have a similar scale. Standardizing the features can improve the convergence of these algorithms and help them find the optimal solution more efficiently.
+
+Interpretability and comparability: When features are standardized, their values are transformed to a common scale, making them more interpretable and comparable. The standardized values represent the number of standard deviations the original values are from the mean. This allows for easier interpretation and understanding of the relative importance and impact of each feature on the model.
+
+Reduce the influence of outliers: Standardization can help mitigate the impact of outliers on the model. By transforming the features to a Gaussian distribution, extreme values (outliers) are scaled to a smaller range and have less influence on the model's behavior. This can lead to more robust and stable model performance.
+
+Improve feature importance estimation: Standardization helps to provide a fair estimation of feature importance or feature contribution in models that use regularization techniques or rely on feature weights. It ensures that the importance or weights are not biased by the original scale of the features.
+
+Overall, standardizing features to a Gaussian distribution is a common practice in data preprocessing to improve the performance, stability, and interpretability of machine learning models. It helps to address issues related to feature scales, convergence, interpretability, outliers, and fair comparison between features.
 
 
+```{r}
+standdata <- cleandata
+
+# Select the independent variables
+independent_vars <- names(cleandata)[names(cleandata) != "Diagnosis"]
+
+# Standardize the independent variables using Gaussian distribution
+stand_data <- as.data.frame(scale(cleandata[, independent_vars]))
+
+standdata[, independent_vars] <- stand_data
+head(standdata, 10)
+```
+```{r}
+summary(standdata)
+
+```
+
+## Normalize Data (Diagnosis)
+```{r}
+# Convert "Diagnosis" column to factor
+standdata$Diagnosis <- as.factor(standdata$Diagnosis)
+
+# Check class distribution
+table(standdata$Diagnosis)
+
+# Get the indices of the minority and majority class
+minority_indices <- which(standdata$Diagnosis == 1)
+majority_indices <- which(standdata$Diagnosis == 0)
+
+# Oversample the minority class
+oversampled_minority_indices <- sample(minority_indices, 500, replace = TRUE)
+
+# Undersample the majority class
+undersampled_majority_indices <- sample(majority_indices, 500)
+
+# Combine the minority and balanced majority indices
+balanced_indices <- c(oversampled_minority_indices, undersampled_majority_indices)
+
+# Create the balanced dataset
+balanced_data <- standdata[balanced_indices, ]
+
+# Check the class distribution of the balanced dataset
+table(balanced_data$Diagnosis)
+```
+
+```{r}
+balanced_data
+standdata
+```
+
+# Model
+
+```{r}
+# Load the required library
+library(glmnet)
+
+# Create the formula for logistic regression
+formula <- as.formula("Diagnosis ~ Pregnancies + Glucose + BloodPressure + BMI + Pedigree + Age")
+
+# Fit the logistic regression model
+LRM1 <- glm(formula, data = balanced_data, family = "binomial")
+
+summary(LRM1)
+```
+
+
+```{r}
+# Select the desired columns including the "Diagnosis" column
+selected_data <- balanced_data[, c("Pregnancies", "Glucose", "BloodPressure", "BMI", "Pedigree", "Age", "Diagnosis")]
+
+# Predict using the model
+predictions <- predict(LRM1, newdata = selected_data, type = "response")
+
+# Convert predicted probabilities to class labels (0 or 1)
+predicted_classes <- ifelse(predictions > 0.5, 1, 0)
+
+# Convert predicted_classes and standdata$Diagnosis to factors with the same levels
+predicted_classes <- factor(predicted_classes, levels = c(0, 1))
+selected_data$Diagnosis <- factor(selected_data$Diagnosis, levels = c(0, 1))
+
+# Create a confusion matrix
+confusion_matrix <- confusionMatrix(predicted_classes, LMR1DATA$Diagnosis)
+
+# Calculate accuracy
+accuracy <- confusion_matrix$overall['Accuracy']
+
+# Print the accuracy
+print(accuracy)
+print(confusion_matrix)
+```
 
 
 
