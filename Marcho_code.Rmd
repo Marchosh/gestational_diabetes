@@ -288,7 +288,57 @@ print(p)
 head(cleandata)
 ```
 
+## Corelation Pregnancy Diagnostic
+```{r}
+pregnancy_counts <-  table(cleandata$Diagnosis, cleandata$Pregnancies)
 
+# Create a side-by-side bar plot
+barplot(diagnostic_counts, 
+        main = "Number of Pregnancies vs Diagnostic Outcome",
+        xlab = "Diagnostic Outcome",
+        ylab = "Number of Pregnancies",
+        col = c("blue", "red"),
+        legend = rownames(pregnancy_counts),
+        beside = TRUE)
+```
+
+The more number of pregnancies shows higher chance of the person diagnos as GDM
+
+```{r}
+pregnancy_counts
+```
+65.77%	78.52%	81.55%	64.00%	66.18%	63.16%	68.00%	44.44%	42.11%	35.71%	48.28%
+34.23%	21.48%	18.45%	36.00%	33.82%	36.84%	32.00%	55.56%	57.89%	64.29%	51.72%
+
+## SKinthckiness vs BMI (diagnsois)
+```{r}
+# Create a scatter plot with different colors for each diagnosis category
+ggplot(cleandata, aes(x = SkinThickness, y = BMI, color = Diagnosis)) +
+  geom_point() +
+  labs(x = "Skin Thickness", y = "BMI", color = "Diagnosis") +
+  theme_minimal()
+
+```
+
+## Skinthciksness vs Insulin
+```{r}
+# Create a scatter plot with different colors for each diagnosis category
+ggplot(cleandata, aes(x = SkinThickness, y = Insulin, color = Diagnosis)) +
+  geom_point() +
+  labs(x = "Skin Thickness", y = "Insulin", color = "Diagnosis") +
+  theme_minimal()
+
+```
+
+## AGE vs BMI
+```{r}
+# Create a scatter plot with different colors for each diagnosis category
+ggplot(cleandata, aes(x = BMI , y = Age, color = Diagnosis)) +
+  geom_point() +
+  labs(x = "Age", y = "BMI", color = "Diagnosis") +
+  theme_minimal()
+
+```
 
 # Outlier
 ```{r}
@@ -373,6 +423,13 @@ for (var in names(cleandata)) {
 
 ```
 
+# pairs plot
+```{r}
+# Install and load the required packages
+library(psych)
+
+pairs.panels(cleandata)
+```
 
 
 # Select Varaible

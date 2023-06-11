@@ -19,16 +19,21 @@ library(dplyr)
 library(gridExtra)
 library(naniar)
 library(visdat)
+library(corrplot)
+library(caret)
+library(ROSE)
 ```
 
 
-#Data
+# a) Data
 ```{r}
 data <- read.csv(url("https://raw.githubusercontent.com/Marchosh/gestational_diabetes/master/patients.csv?token=GHSAT0AAAAAACC7K4VFNJCC5HTZ23CRGRBAZDMELKA"))
 head(data)
 ```
 
+There are a lot of missing values and other values that seem like they are outliers. They are either way to high or way to low
 
+# B) Summary statistics
 ```{r}
 summary(data)
 
@@ -80,6 +85,8 @@ ggplot(data, aes(x = factor(Diagnosis))) +
 
 ```
 
+there is inbalance of the Diagnosis data which we might need to balanced it since it is the target vraible
+
 ```{r}
 # Exclude non-numeric variables
 vars <- names(data)[sapply(data, is.numeric)]
@@ -97,6 +104,9 @@ for (var in vars) {
 }
 
 ```
+
+It's quite hard to see the relationship of each vraible to Diagnosis, there is many overlapping area, and also some of the outliar are shown
+
 ```{r}
 # Exclude non-numeric variables and the "Diagnosis" column
 vars <- names(data)[!sapply(data, is.factor)]
@@ -123,6 +133,29 @@ for (plot in plots) {
 }
 
 ```
+
+```{r}
+  #Boxplot of BMI by Diagnosis
+ggplot(data, aes(x = Diagnosis, y = BMI, group = Diagnosis)) + geom_boxplot(fill = "lightgreen") + labs(x = "Diagnosis", y = "BMI") + ggtitle("BMI by Diagnosis")
+
+  #Scatterplot of BloodPressure and Age
+ggplot(data, aes(x = Age, y = BloodPressure)) + geom_point(color = "blue", alpha = 0.6) + labs(x = "Age", y = "Blood Pressure") + ggtitle("Blood Pressure by Age")
+
+  #Barplot of Pregnancies
+ggplot(data, aes(x = Pregnancies)) + geom_bar(fill = "lightpink") + labs(x = "Pregnancies", y = "Count") +  ggtitle("Distribution of Pregnancies")
+
+  #Density Plot of Insulin by Diagnosis
+ggplot(data, aes(x = Insulin, fill = Diagnosis)) + geom_density(alpha = 0.5) + labs(x = "Insulin", y = "Density") + ggtitle("Insulin Distribution by Diagnosis")
+```
+
+The box plot of BMI by Diagnosis shows the two values of diagnosis (0 and 1) and see how BMI reacts to those values of Diagnosis. 0 represents people who are not diagnosed with diabetes and 1 represents people who have been diagnosed with diabetes. People who are diagnosed with diabetes have a higher BMI while people who are not diagnosed have a lower BMI. The median of people diagnosed is around 35, have more outliers, the highest value of the box is 39, and the lowest is 31. When we look at the people who are not diagnosed with diabetes the median is 30, fewer outliers, the highest value of the box being 36, and the lowest is 26.
+
+The scatter plot of Blood Pressure by Age shows that as age increases blood pressure also increases.
+
+The bar chart of Pregnancies show how many times people have been pregnant. Most people have been pregnant 1 time and the outlier being 17 which is the highest. We can also see that the plot is skewed to the right.
+
+Density graph of Insulin by Diagnosis
+
 ## histogram
 ```{r}
 # Create histograms for each variable
@@ -139,6 +172,7 @@ for (var in numeric_vars) {
 Pregnancies:
 
 Glucose:
+The histogram of Glucose shows that most people have a glucose level between 100 and 125. The highest level being 117 and the amount of people with that amount of Glucose level are around the 110.
 there is zero value which missing value mostlikely
 
 Blood Preasue:
@@ -177,6 +211,8 @@ for (var in numeric_vars) {
 
 ```
 
+
+
 ```{r}
 # Create density plots for each variable
 numeric_vars <- names(data)[sapply(data, is.numeric)]
@@ -190,8 +226,36 @@ for (var in numeric_vars) {
 
 ```
 
+## Corelation Pregnancy Diagnostic
+```{r}
+pregnancy_counts <-  table(data$Diagnosis, data$Pregnancies)
 
-# missing value
+# Create a side-by-side bar plot
+barplot(diagnostic_counts, 
+        main = "Number of Pregnancies vs Diagnostic Outcome",
+        xlab = "Diagnostic Outcome",
+        ylab = "Number of Pregnancies",
+        col = c("blue", "red"),
+        legend = rownames(pregnancy_counts),
+        beside = TRUE)
+```
+
+The more number of pregnancies shows higher chance of the person diagnos as GDM
+
+## SKinthckiness vs BMI (diagnsois)
+```{r}
+# Create a scatter plot with different colors for each diagnosis category
+ggplot(data, aes(x = SkinThickness, y = BMI, color = Diagnosis)) +
+  geom_point() +
+  labs(x = "Skin Thickness", y = "BMI", color = "Diagnosis") +
+  theme_minimal()
+
+```
+
+skinThickness and BMi shows a postive corelation but, some of the skin thcikness that has value 0 make the correlation lower.
+the skin thickness with value 0 might be potential missing value but consdering the amount so many might influence the original data
+
+# D) missing value
 
 ```{r}
 # Calculate the number of missing values for each variable
@@ -211,13 +275,20 @@ p <- ggplot(missing_counts_long, aes(x = Variable, y = Missing_Count, fill = Var
 print(p)
 
 ```
+It shows that Diagnosis has highes since it contatin 0 but we know that it's not missing value but actual value
+For the varaible Insulin and skinthckiness and preganncies showing execptionaly high number of 0 which might not a missing value
+
+
 
 ```{r}
-# Replace 0 with NA for missing values
-data[data == 0] <- NA
+# Create a new dataframe called missdata
+missdata <- data
+
+# Replace 0 with NA for missing values in missdata
+missdata[missdata == 0] <- NA
 
 # Plot the modified missing values heatmap
-vis_miss(data)
+vis_miss(missdata)
 ```
 
 Diagnosis 0 is category so is not mising value,
@@ -229,62 +300,92 @@ But the other (Glucose, BloodPreassure, and BMi) variable 0 is mostlikely missin
 We can see straight long line continous from one oclumn to other it showed that,
 when 1 of the column missing the other column are also likely to be missing
 
-
-
-# Outlier
+## Replace missing value (0) in (Glucose, BloodPreassure, and BMi)
 ```{r}
-# Identify the numeric independent variables
-numeric_vars <- names(data)[sapply(data, is.numeric)]
+cleandata <- data
 
-# Remove rows with missing values
-data_complete <- na.omit(data)
+# Calculate the median values
+median_glucose <- median(cleandata$Glucose, na.rm = TRUE)
+median_bp <- median(cleandata$BloodPressure, na.rm = TRUE)
+median_bmi <- median(cleandata$BMI, na.rm = TRUE)
 
-# Create a box plot for each independent variable
-for (var in numeric_vars) {
-  p <- ggplot(data_complete, aes(x = Diagnosis, y = data_complete[[var]])) +
+# Replace 0 with median in Glucose column
+cleandata$Glucose <- ifelse(cleandata$Glucose == 0, median_glucose, cleandata$Glucose)
+
+# Replace 0 with median in BloodPressure column
+cleandata$BloodPressure <- ifelse(cleandata$BloodPressure == 0, median_bp, cleandata$BloodPressure)
+
+# Replace 0 with median in BMI column
+cleandata$BMI <- ifelse(cleandata$BMI == 0, median_bmi, cleandata$BMI)
+```
+
+## After Cleaning
+```{r}
+# Calculate the number of missing values for each variable
+missing_counts <- cleandata %>%
+  summarise_all(~sum(is.na(.) | . == 0))
+
+# Convert missing_counts to long format for plotting
+missing_counts_long <- tidyr::pivot_longer(missing_counts, everything(), names_to = "Variable", values_to = "Missing_Count")
+
+# Create the bar plot
+p <- ggplot(missing_counts_long, aes(x = Variable, y = Missing_Count, fill = Variable)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Variable", y = "Missing Count", title = "Number of Missing Values by Variable") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+print(p)
+
+```
+
+# E) Outlier
+```{r}
+# Create box plot for each variable
+for (var in names(cleandata)) {
+  p <- ggplot(cleandata, aes(x = 1, y = cleandata[[var]])) +
     geom_boxplot(fill = "lightblue", color = "black") +
-    labs(x = "Diagnosis", y = var, title = paste("Box Plot of", var, "by Diagnosis")) +
-    theme_minimal()
+    labs(x = "", y = var, title = paste("Box Plot of", var)) +
+    theme_minimal() +
+    theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
   print(p)
 }
 ```
 
 
 ```{r}
-# Identify the numeric independent variables
-numeric_vars <- names(data)[sapply(data, is.numeric)]
+# Assign independent variables
+independent_vars <- names(cleandata)[names(cleandata) != "Diagnosis"]
 
-# Find outliers using the IQR rule
-outliers <- lapply(data[numeric_vars], function(var) {
-  Q1 <- quantile(var, 0.25, na.rm = TRUE)
-  Q3 <- quantile(var, 0.75, na.rm = TRUE)
-  IQR <- Q3 - Q1
-  lower_bound <- Q1 - 1.5 * IQR
-  upper_bound <- Q3 + 1.5 * IQR
-  outliers <- var[var < lower_bound | var > upper_bound]
-  return(outliers)
+# Calculate the IQR for each independent variable
+iqr_values <- apply(cleandata[, independent_vars], 2, IQR)
+
+# Find the lower and upper bounds for outliers
+lower_bounds <- apply(cleandata[, independent_vars], 2, function(x) quantile(x, 0.25) - 1.5 * IQR(x))
+upper_bounds <- apply(cleandata[, independent_vars], 2, function(x) quantile(x, 0.75) + 1.5 * IQR(x))
+
+# Identify the outliers for each variable
+outliers <- lapply(seq_along(independent_vars), function(i) {
+  outliers <- which(cleandata[, independent_vars[i]] < lower_bounds[i] | cleandata[, independent_vars[i]] > upper_bounds[i])
+  if (length(outliers) > 0) {
+    data.frame(Variable = independent_vars[i], Outlier_Value = cleandata[outliers, independent_vars[i]])
+  } else {
+    NULL
+  }
 })
 
-# Print the outliers for each variable
-for (i in 1:length(numeric_vars)) {
-  var <- numeric_vars[i]
-  if (length(outliers[[i]]) > 0) {
-    cat("Outliers for", var, ":\n")
-    print(outliers[[i]])
-    cat("\n")
-  } else {
-    cat("No outliers found for", var, "\n\n")
-  }
-}
+# Combine the outliers into a single data frame
+outliers_df <- do.call(rbind, outliers)
+
+head(outliers_df)
 ```
 
 
---try this method---
-Robust Statistical Methods: Robust statistical methods, such as robust regression or robust estimators, can handle outliers more effectively by downweighting their influence in the analysis. These methods are less sensitive to extreme values and can provide more reliable estimates.
-
-
-
+## Replace Outlier
 Winsorization: Winsorization replaces extreme values with values closer to the rest of the data. Instead of removing the outliers completely, you can replace them with a trimmed or truncated value at a certain percentile. This approach retains the overall distribution shape while reducing the impact of outliers
+
+We used winsorization as our method of replacing outliers. First we identified the desired percentile values which are the 5th and 95th percentiles. These percentiles define the range within which the values will be capped. The next step was to determine the cutoff values. The 5th percentile represents the lower cutoff and the 95th percentile represents the upper cutoff. Any value below the lower cutoff will be replaced with the value of the lower cutoff and any value above the upper cutoff will be replaced with the upper cutoff. 
+
 
 ```{r}
 # Apply Winsorization to replace outliers in selected variables
@@ -320,7 +421,16 @@ for (var in names(cleandata)) {
 
 
 
-# Select Varaible
+# G) Select Varaible from correlation table
+
+## pairs plot
+```{r}
+library(psych)
+
+pairs.panels(cleandata)
+```
+
+
 ```{r}
 # Calculate the correlation matrix
 cor_matrix <- cor(cleandata)
@@ -340,7 +450,7 @@ and between Insulin and skinthcikness
 Skinthickness and Insulin is removed since it has great umber of 0
 
 
-# Standarization
+# H) Standarization
 Standardizing features to a Gaussian distribution can be a good idea for several reasons:
 
 Equalize the scales: Standardizing the features ensures that they are on a comparable scale. This is important when working with algorithms that are sensitive to the scale of the variables. Standardization prevents features with larger scales from dominating the algorithm and helps to ensure fair comparisons between different features.
@@ -373,7 +483,10 @@ summary(standdata)
 
 ```
 
-## Normalize Data (Diagnosis)
+
+It is good to standardize the feature so we can compare the variables, we can avoid bias, and we can assume that we have a normal distibution.
+
+# Normalize Inbalance Data (Diagnosis)
 ```{r}
 # Convert "Diagnosis" column to factor
 standdata$Diagnosis <- as.factor(standdata$Diagnosis)
@@ -401,12 +514,7 @@ balanced_data <- standdata[balanced_indices, ]
 table(balanced_data$Diagnosis)
 ```
 
-```{r}
-balanced_data
-standdata
-```
-
-# Model
+# I) Model LRM1 (logistic regression with slected varaibles)
 
 ```{r}
 # Load the required library
@@ -421,7 +529,9 @@ LRM1 <- glm(formula, data = balanced_data, family = "binomial")
 summary(LRM1)
 ```
 
+We select vraible by removing the Insulin and skinthcikness since it has exceptionaly high number of 0
 
+# J)  Model Report
 ```{r}
 # Select the desired columns including the "Diagnosis" column
 selected_data <- balanced_data[, c("Pregnancies", "Glucose", "BloodPressure", "BMI", "Pedigree", "Age", "Diagnosis")]
@@ -437,7 +547,7 @@ predicted_classes <- factor(predicted_classes, levels = c(0, 1))
 selected_data$Diagnosis <- factor(selected_data$Diagnosis, levels = c(0, 1))
 
 # Create a confusion matrix
-confusion_matrix <- confusionMatrix(predicted_classes, LMR1DATA$Diagnosis)
+confusion_matrix <- confusionMatrix(predicted_classes, balanced_data$Diagnosis)
 
 # Calculate accuracy
 accuracy <- confusion_matrix$overall['Accuracy']
@@ -445,20 +555,229 @@ accuracy <- confusion_matrix$overall['Accuracy']
 # Print the accuracy
 print(accuracy)
 print(confusion_matrix)
+
+```
+The accuracy is 76.9% which mean from the data trained it only able to correctly predict 76.9% of it
+
+# K) classification report (precision, recall, F1 score, and support)
+
+```{r}
+# Calculate precision
+precision <- confusion_matrix$byClass["Pos Pred Value"]
+
+# Calculate recall
+recall <- confusion_matrix$byClass["Sensitivity"]
+
+# Calculate F1 score
+f1_score <- 2 * (precision * recall) / (precision + recall)
+
+# Calculate support
+support <- confusion_matrix$table[2,2]  # True positive count
+
+# Print the results
+cat("Precision:", precision, "\n")
+cat("Recall:", recall, "\n")
+cat("F1 Score:", f1_score, "\n")
+cat("Support:", support, "\n")
 ```
 
 
+the precision value of 0.75   means that out of all the instances predicted as positive, around 75% were correctly classified as positive.
+
+The recall value of 0.786  indicates that the model correctly identified around 78.6% of the actual positive instances.
+
+The F1 score value of 0.7675781  suggests a good balance between precision and recall for the model's performance.
+
+Support: Support refers to the number of actual instances belonging to the positive class in the dataset. In this case, the support value of 369  indicates that there are 369  instances classified as positive in the dataset.
+
+
+# L) accuracy score of your model **** not finished since i dont split the dataset
+
+```{r}
+# Make predictions on test data
+predictions_LRM1 <- predict(LRM1, newdata = balanced_data, type = "response")
+
+# Calculate accuracy score for LRM1
+accuracy_LRM1 <- sum(predictions_LRM1 == balanced_data$Diagnosis) / length(predictions_LRM1)
+print(paste("Accuracy Score (LRM1):", accuracy_LRM1))
+```
+# M) Model LRM2 - Full model
+
+```{r}
+# Load the required library
+library(glmnet)
+
+# Create the formula for logistic regression
+formula <- as.formula("Diagnosis ~ .")
+
+# Fit the logistic regression model
+LRM2 <- glm(formula, data = balanced_data, family = "binomial")
+
+summary(LRM2)
+
+
+```
+
+```{r}
+# Predict using the model
+predicted_classes <- ifelse(predict(LRM2, newdata = balanced_data, type = "response") > 0.5, 1, 0)
+
+
+# Create a confusion matrix
+confusion_matrix <- table(predicted_classes, balanced_data$Diagnosis)
+
+# Calculate accuracy
+accuracy <- sum(diag(confusion_matrix)) / sum(confusion_matrix)
+
+# Print the confusion matrix and accuracy
+print(confusion_matrix)
+print(paste("Accuracy:", accuracy))
+
+```
+The overall has slightly higher accuracy. it shows 76.3%
+
+## N) Compare
+```{r}
+# Perform likelihood ratio test
+lr_test <- anova(LRM1, LRM2, test = "LRT")
+
+# Extract the test statistic, degrees of freedom, and p-value
+test_statistic <- lr_test$Deviance[2]
+degrees_of_freedom <- lr_test$Df[2]
+p_value <- 1 - pchisq(test_statistic, degrees_of_freedom)
+
+# Print the test results
+print(paste("Test Statistic:", test_statistic))
+print(paste("Degrees of Freedom:", degrees_of_freedom))
+print(paste("p-value:", p_value))
+```
+The obtained test statistic is 4.21, indicating that LRM2 provides a better fit than LRM1.
+The degrees of freedom are 2, representing the difference in the number of parameters between the two models.
+The p-value is 0.12, which is greater than the commonly used significance level of 0.05. This suggests that there is not enough evidence to reject the null hypothesis, indicating that the improvement provided by LRM2 is not significantly diffrent from LRM1.
+
+# O) Examine the coefficients - direction and significance of the relationship between the predictor variables and the outcome variable
+
+```{r}
+# View the coefficient estimates
+coef_summary <- summary(LRM1)$coefficients
+print(coef_summary)
+
+# Access the coefficient values
+coefficients <- coef_summary[, "Estimate"]
+
+# Access the p-values
+p_values <- coef_summary[, "Pr(>|z|)"]
+
+# Loop through the coefficients and interpret the results
+for (i in 1:length(coefficients)) {
+  coefficient <- coefficients[i]
+  p_value <- p_values[i]
+  
+  if (p_value < 0.05) {
+    significance <- "significant"
+  } else {
+    significance <- "not significant"
+  }
+  
+  if (coefficient > 0) {
+    direction <- "positive"
+  } else if (coefficient < 0) {
+    direction <- "negative"
+  } else {
+    direction <- "no"
+  }
+  
+  predictor <- names(coefficients)[i + 1]  # Skip the intercept term
+  
+  cat(paste("The coefficient for", predictor, "is", coefficient,
+            "indicating a", direction, "relationship, and is", significance, "\n"))
+}
+```
+
+# P) hypothesis tests that your model is significantly better.
+Bernouli Test
+```{r}
+# Set the desired significance level
+significance_level <- 0.05
+
+# Calculate the number of hypothesis tests (in this case, 1)
+num_tests <- 1
 
 
 
+# Perform likelihood ratio test
+lr_test <- anova(LRM1, LRM2, test = "LRT")
+
+# Extract the test statistic, degrees of freedom, and p-value
+test_statistic <- lr_test$Deviance[2]
+degrees_of_freedom <- lr_test$Df[2]
+p_value <- 1 - pchisq(test_statistic, degrees_of_freedom)
 
 
+significance_level <- 0.05
+num_tests <- 4
+# Adjust the significance level using the Bonferroni correction
+adjusted_significance_level <- significance_level / num_tests
+
+# Compare the p-value with the adjusted significance level
+if (p_value < adjusted_significance_level) {
+  print("Reject the null hypothesis - LRM2 is significantly better than LRM1")
+} else {
+  print("Fail to reject the null hypothesis - LRM2 is not significantly better than LRM1")
+}
+```
+
+# q) Bonferroni correction
+```{r}
+# Original significance level
+alpha <- 0.05
+
+# Number of hypothesis tests
+num_tests <- 1
+
+# Bonferroni-corrected significance level
+adjusted_alpha <- alpha / num_tests
+
+# Perform hypothesis test using adjusted significance level
+if (p_value < adjusted_alpha) {
+  interpretation <- "Reject the null hypothesis. Model 1 is significantly better than Model 0."
+} else {
+  interpretation <- "Fail to reject the null hypothesis. Model 1 is not significantly better than Model 0."
+}
+
+# Print the adjusted significance level and interpretation
+cat("Adjusted Significance Level:", adjusted_alpha, "\n")
+cat("Interpretation:", interpretation, "\n")
+```
+
+# r) suggestions for further improving the accuracy of your chosen model
+
+The following are some suggestions for enhancing the chosen model's accuracy further:
+
+1. Engineering of Features: Investigate additional methods of feature engineering to construct relevant new features from existing ones. Combining features, generating interaction terms, or extracting relevant data are all examples of this.
+
+2. Selection of Features: Utilize techniques for feature selection to identify the model's most essential features. This can help focus on the most relevant predictors while reducing noise. Recursive Feature Elimination (RFE), Lasso regression, and feature importance from tree-based models are all options.
+
+3. Choosing a Model: Try different things with various sorts of models or troupe strategies to check whether they can all the more likely catch the fundamental examples in the information. Try random forests, gradient boosting machines, or support vector machines as an algorithm.
+
+4. Tuning the Hyperparameters: Optimize the model's performance by fine-tuning its hyperparameters. To find the optimal hyperparameter combination, methods like grid search, random search, or Bayesian optimization can be used.
+
+5. Cross-Validation: To avoid overfitting and obtain a more robust estimate of the model's performance, employ cross-validation methods like k-fold cross-validation. This aids in determining the model's capacity for generalization.
+
+6. Taking care of Class Unevenness: On the off chance that the dataset has class unevenness, where one class is fundamentally more predominant than the other, consider utilizing strategies, for example, oversampling the minority class (e.g., Destroyed) or undersampling the greater part class to adjust the dataset and work on model execution.
+
+7. More Data Collection: To increase the dataset's size, gather additional data whenever possible. The model can learn more effectively and better generalize to unobserved examples with more data.
+
+8. Explore Blunders: Examine the model's mistakes to learn more about the kinds of situations it faces. This can direct further enhancements, like gathering extra highlights or tending to explicit examples in the information.
+
+9. Regularization: To avoid overfitting and boost model performance, use regularization methods like L1 and L2 regularization.
+
+10. Skills in the Field: Include domain expertise in the modeling procedure. Think about consulting domain experts to learn more about the problem's particular characteristics and incorporate their insights into feature engineering or model design.
+
+It is essential to keep in mind that the problem and dataset at hand may have different effects on these suggestions' efficacy. It is prescribed to explore different avenues regarding various methodologies and cautiously assess their effect on the model's presentation.
 
 
-
-
-
-
+# Improving Model by reducing TYPE-II ERROR
 
 
 
