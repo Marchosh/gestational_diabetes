@@ -517,24 +517,29 @@ table(balanced_data$Diagnosis)
 # I) Model LRM1 (logistic regression with slected varaibles)
 
 ```{r}
-# Load the required library
-library(glmnet)
+# Set the seed for reproducibility
+set.seed(123)
+
+# Split the data into training and testing sets
+trainIndex <- createDataPartition(balanced_data$Diagnosis, p = 0.8, list = FALSE)
+trainData <- balanced_data[trainIndex, ]
+testData <- balanced_data[-trainIndex, ]
 
 # Create the formula for logistic regression
 formula <- as.formula("Diagnosis ~ Pregnancies + Glucose + BloodPressure + BMI + Pedigree + Age")
 
 # Fit the logistic regression model
-LRM1 <- glm(formula, data = balanced_data, family = "binomial")
+LRM1 <- glm(formula, data = trainData, family = "binomial")
 
 summary(LRM1)
 ```
 
-We select vraible by removing the Insulin and skinthcikness since it has exceptionaly high number of 0
+We select variable by removing the Insulin and skinthcikness since it has exceptionaly high number of 0
 
 # J)  Model Report
 ```{r}
 # Select the desired columns including the "Diagnosis" column
-selected_data <- balanced_data[, c("Pregnancies", "Glucose", "BloodPressure", "BMI", "Pedigree", "Age", "Diagnosis")]
+selected_data <- trainData[, c("Pregnancies", "Glucose", "BloodPressure", "BMI", "Pedigree", "Age", "Diagnosis")]
 
 # Predict using the model
 predictions <- predict(LRM1, newdata = selected_data, type = "response")
@@ -547,7 +552,7 @@ predicted_classes <- factor(predicted_classes, levels = c(0, 1))
 selected_data$Diagnosis <- factor(selected_data$Diagnosis, levels = c(0, 1))
 
 # Create a confusion matrix
-confusion_matrix <- confusionMatrix(predicted_classes, balanced_data$Diagnosis)
+confusion_matrix <- confusionMatrix(predicted_classes, trainData$Diagnosis)
 
 # Calculate accuracy
 accuracy <- confusion_matrix$overall['Accuracy']
@@ -557,7 +562,7 @@ print(accuracy)
 print(confusion_matrix)
 
 ```
-The accuracy is 76.9% which mean from the data trained it only able to correctly predict 76.9% of it
+The accuracy is 77.5% which mean from the data trained it only able to correctly predict 77.5% of it
 
 # K) classification report (precision, recall, F1 score, and support)
 
@@ -582,61 +587,105 @@ cat("Support:", support, "\n")
 ```
 
 
-the precision value of 0.75   means that out of all the instances predicted as positive, around 75% were correctly classified as positive.
+the precision value of 0.73 means that out of all the instances predicted as positive, around 73% were correctly classified as positive.
 
-The recall value of 0.786  indicates that the model correctly identified around 78.6% of the actual positive instances.
+The recall value of 0.85 indicates that the model correctly identified around 85% of the actual positive instances.
 
-The F1 score value of 0.7675781  suggests a good balance between precision and recall for the model's performance.
+The F1 score value of 0.79 suggests a good balance between precision and recall for the model's performance.
 
 Support: Support refers to the number of actual instances belonging to the positive class in the dataset. In this case, the support value of 369  indicates that there are 369  instances classified as positive in the dataset.
 
 
-# L) accuracy score of your model **** not finished since i dont split the dataset
+# L) accuracy score of your model
 
 ```{r}
-# Make predictions on test data
-predictions_LRM1 <- predict(LRM1, newdata = balanced_data, type = "response")
+# Select the desired columns including the "Diagnosis" column
+selected_data <- testData[, c("Pregnancies", "Glucose", "BloodPressure", "BMI", "Pedigree", "Age", "Diagnosis")]
 
-# Calculate accuracy score for LRM1
-accuracy_LRM1 <- sum(predictions_LRM1 == balanced_data$Diagnosis) / length(predictions_LRM1)
-print(paste("Accuracy Score (LRM1):", accuracy_LRM1))
+# Predict using the model
+predictions <- predict(LRM1, newdata = selected_data, type = "response")
+
+# Convert predicted probabilities to class labels (0 or 1)
+predicted_classes <- ifelse(predictions > 0.5, 1, 0)
+
+actual_values <- testData$Diagnosis
+
+# Calculate the accuracy
+accuracy <- sum(predicted_classes == actual_values) / length(actual_values)
+
+# Print the accuracy
+print(accuracy)
 ```
+Accuracy: Classification models frequently use accuracy as an evaluation criterion. It addresses the extent of right expectations out of the absolute number of forecasts. The ratio of the number of accurate predictions to the total number of predictions is used to calculate it.
+The LRM1 model's accuracy score in this instance is 0.765, indicating that approximately 73% of its predictions were correct.
+
 # M) Model LRM2 - Full model
-
 ```{r}
-# Load the required library
-library(glmnet)
-
 # Create the formula for logistic regression
 formula <- as.formula("Diagnosis ~ .")
 
 # Fit the logistic regression model
-LRM2 <- glm(formula, data = balanced_data, family = "binomial")
+LRM2 <- glm(formula, data = trainData, family = "binomial")
 
 summary(LRM2)
 
-
 ```
+
+
 
 ```{r}
 # Predict using the model
-predicted_classes <- ifelse(predict(LRM2, newdata = balanced_data, type = "response") > 0.5, 1, 0)
+predictions <- predict(LRM2, newdata = trainData, type = "response")
 
+# Convert predicted probabilities to class labels (0 or 1)
+predicted_classes <- ifelse(predictions > 0.5, 1, 0)
+
+# Convert predicted_classes and standdata$Diagnosis to factors with the same levels
+predicted_classes <- factor(predicted_classes, levels = c(0, 1))
+selected_data$Diagnosis <- factor(selected_data$Diagnosis, levels = c(0, 1))
 
 # Create a confusion matrix
-confusion_matrix <- table(predicted_classes, balanced_data$Diagnosis)
+confusion_matrix2 <- confusionMatrix(predicted_classes, trainData$Diagnosis)
 
 # Calculate accuracy
-accuracy <- sum(diag(confusion_matrix)) / sum(confusion_matrix)
+accuracy <- confusion_matrix2$overall['Accuracy']
 
-# Print the confusion matrix and accuracy
-print(confusion_matrix)
-print(paste("Accuracy:", accuracy))
-
+# Print the accuracy
+print(accuracy)
+print(confusion_matrix2)
 ```
-The overall has slightly higher accuracy. it shows 76.3%
 
-## N) Compare
+The overall has slightly lower accuracy. it shows 77.0%
+
+```{r}
+# Calculate precision
+precision <- confusion_matrix2$byClass["Pos Pred Value"]
+
+# Calculate recall
+recall <- confusion_matrix2$byClass["Sensitivity"]
+
+# Calculate F1 score
+f1_score <- 2 * (precision * recall) / (precision + recall)
+
+# Calculate support
+support <- confusion_matrix2$table[2,2]  # True positive count
+
+# Print the results
+cat("Precision:", precision, "\n")
+cat("Recall:", recall, "\n")
+cat("F1 Score:", f1_score, "\n")
+cat("Support:", support, "\n")
+```
+the precision value of 0.73 means that out of all the instances predicted as positive, around 73% were correctly classified as positive.
+
+The recall value of 0.84 indicates that the model correctly identified around 85% of the actual positive instances.
+
+The F1 score value of 0.78 suggests a good balance between precision and recall for the model's performance.
+
+Support: Support refers to the number of actual instances belonging to the positive class in the dataset. In this case, the support value of 369  indicates that there are 369  instances classified as positive in the dataset.
+
+
+# N) Compare
 ```{r}
 # Perform likelihood ratio test
 lr_test <- anova(LRM1, LRM2, test = "LRT")
@@ -653,7 +702,7 @@ print(paste("p-value:", p_value))
 ```
 The obtained test statistic is 4.21, indicating that LRM2 provides a better fit than LRM1.
 The degrees of freedom are 2, representing the difference in the number of parameters between the two models.
-The p-value is 0.12, which is greater than the commonly used significance level of 0.05. This suggests that there is not enough evidence to reject the null hypothesis, indicating that the improvement provided by LRM2 is not significantly diffrent from LRM1.
+The p-value is 0.08, which is greater than the commonly used significance level of 0.05. This suggests that there is not enough evidence to reject the null hypothesis, indicating that the improvement provided by LRM2 is not significantly diffrent from LRM1.
 
 # O) Examine the coefficients - direction and significance of the relationship between the predictor variables and the outcome variable
 

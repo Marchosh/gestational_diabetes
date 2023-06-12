@@ -330,16 +330,6 @@ ggplot(cleandata, aes(x = SkinThickness, y = Insulin, color = Diagnosis)) +
 
 ```
 
-## AGE vs BMI
-```{r}
-# Create a scatter plot with different colors for each diagnosis category
-ggplot(cleandata, aes(x = BMI , y = Age, color = Diagnosis)) +
-  geom_point() +
-  labs(x = "Age", y = "BMI", color = "Diagnosis") +
-  theme_minimal()
-
-```
-
 # Outlier
 ```{r}
 
@@ -521,6 +511,22 @@ standdata
 # Model
 
 ```{r}
+# Set the seed for reproducibility
+set.seed(123)
+
+# Assuming your data is stored in a variable called 'data'
+# Replace 'data' with your actual data frame or matrix
+
+# Split the data into training and testing sets
+trainIndex <- createDataPartition(balanced_data$Diagnosis, p = 0.8, list = FALSE)
+trainData <- balanced_data[trainIndex, ]
+testData <- balanced_data[-trainIndex, ]
+
+testData
+```
+
+
+```{r}
 # Load the required library
 library(glmnet)
 
@@ -528,15 +534,18 @@ library(glmnet)
 formula <- as.formula("Diagnosis ~ Pregnancies + Glucose + BloodPressure + BMI + Pedigree + Age")
 
 # Fit the logistic regression model
-LRM1 <- glm(formula, data = balanced_data, family = "binomial")
+LRM1 <- glm(formula, data = trainData, family = "binomial")
 
 summary(LRM1)
 ```
-
+```{r}
+trainData
+balanced_data
+```
 
 ```{r}
 # Select the desired columns including the "Diagnosis" column
-selected_data <- balanced_data[, c("Pregnancies", "Glucose", "BloodPressure", "BMI", "Pedigree", "Age", "Diagnosis")]
+selected_data <- trainData[, c("Pregnancies", "Glucose", "BloodPressure", "BMI", "Pedigree", "Age", "Diagnosis")]
 
 # Predict using the model
 predictions <- predict(LRM1, newdata = selected_data, type = "response")
@@ -549,7 +558,7 @@ predicted_classes <- factor(predicted_classes, levels = c(0, 1))
 selected_data$Diagnosis <- factor(selected_data$Diagnosis, levels = c(0, 1))
 
 # Create a confusion matrix
-confusion_matrix <- confusionMatrix(predicted_classes, LMR1DATA$Diagnosis)
+confusion_matrix <- confusionMatrix(predicted_classes, trainData$Diagnosis)
 
 # Calculate accuracy
 accuracy <- confusion_matrix$overall['Accuracy']
@@ -588,6 +597,29 @@ The recall value of 0.798 indicates that the model correctly identified around 7
 The F1 score value of 0.8184615 suggests a good balance between precision and recall for the model's performance.
 
 Support: Support refers to the number of actual instances belonging to the positive class in the dataset. In this case, the support value of 192 indicates that there are 192 instances classified as positive in the dataset.
+
+
+# N) Accuracy score
+```{r}
+# Select the desired columns including the "Diagnosis" column
+selected_data <- testData[, c("Pregnancies", "Glucose", "BloodPressure", "BMI", "Pedigree", "Age", "Diagnosis")]
+
+# Predict using the model
+predictions <- predict(LRM1, newdata = selected_data, type = "response")
+
+# Convert predicted probabilities to class labels (0 or 1)
+predicted_classes <- ifelse(predictions > 0.5, 1, 0)
+
+actual_values <- testData$Diagnosis
+
+# Calculate the accuracy
+accuracy <- sum(predicted_classes == actual_values) / length(actual_values)
+
+# Print the accuracy
+print(accuracy)
+
+```
+
 
 # Anova
 ```{r}
