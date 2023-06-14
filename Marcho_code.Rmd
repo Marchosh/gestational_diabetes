@@ -599,7 +599,7 @@ The F1 score value of 0.8184615 suggests a good balance between precision and re
 Support: Support refers to the number of actual instances belonging to the positive class in the dataset. In this case, the support value of 192 indicates that there are 192 instances classified as positive in the dataset.
 
 
-# N) Accuracy score
+# L) Accuracy score
 ```{r}
 # Select the desired columns including the "Diagnosis" column
 selected_data <- testData[, c("Pregnancies", "Glucose", "BloodPressure", "BMI", "Pedigree", "Age", "Diagnosis")]

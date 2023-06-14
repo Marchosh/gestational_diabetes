@@ -75,7 +75,7 @@ Diagnosis:
 The diagnosis variable is binary, with 0 representing a negative diagnosis (no diabetes) and 1 representing a positive diagnosis (diabetes).
 Approximately 34.9% of the cases in the dataset are diagnosed with diabetes, as indicated by the mean.
 
-# EDA
+# C) EDA
 ```{r}
 # Bar plot of Diagnosis
 ggplot(data, aes(x = factor(Diagnosis))) +
@@ -88,24 +88,45 @@ ggplot(data, aes(x = factor(Diagnosis))) +
 there is inbalance of the Diagnosis data which we might need to balanced it since it is the target vraible
 
 ```{r}
-# Exclude non-numeric variables
-vars <- names(data)[sapply(data, is.numeric)]
+library(psych)
 
-# Loop through the variables and create scatter plots
-for (var in vars) {
-  plot <- ggplot(data, aes(x = .data[[var]], y = Diagnosis, color = as.factor(Diagnosis))) +
-    geom_point() +
-    labs(x = var, y = "Diagnosis", color = "Diagnosis") +
-    ggtitle(paste("Scatter Plot of", var, "against Diagnosis")) +
-    theme(legend.position = "bottom") +
-    scale_color_brewer(palette = "Set1")
-  
-  print(plot)
-}
-
+pairs.panels(cleandata)
 ```
 
-It's quite hard to see the relationship of each vraible to Diagnosis, there is many overlapping area, and also some of the outliar are shown
+
+
+It's quite hard to see the relationship of each variable to Diagnosis, there is many overlapping area, and also some of the outliar are shown. The data taht shows postive relationship with each other is SkinThckiness vs BMI and Glucose vs Insulin. but their correlation get lower becasue of the amount of 0 in Skinthcikness and and Insulin. The other data shows more randomly distributted and no pattern can be seen from the scatter plot. there is no indication of multicoliniarity fro mthe variable. 
+
+the distribution of the data shows that not everything is normally distributted especially Insulin and skinThickness, which has really high number of 0 observation present. For the variable Age and Pregnancies shows skewness to right. the pregnancies has many number of 0 but it still seems to be normal considering the number and it looks quite good for the distrution eventhough it's skewd to the right.
+For the Age, it skewd becasue there are more younger person get observed comapred to older people.
+
+More detailed on the histogram:
+Pregnancies:
+
+Glucose:
+The histogram of Glucose shows that most people have a glucose level between 100 and 125. The highest level being 117 and the amount of people with that amount of Glucose level are around the 110.
+there is zero value which missing value mostlikely
+
+Blood Preasue:
+there si possibility of missing value in the blood preaseure since 0 is present
+
+Skin thickness:
+missing value 0
+
+Insulin:
+hug spike in 0 must be investivigated
+
+BMI:
+0 porbabluy missing value
+
+Pedigree:
+all equal, need to be investivigated
+
+AGE:
+seem some outlier with women over 60
+
+Diagnosis:
+Binary
 
 ```{r}
 # Exclude non-numeric variables and the "Diagnosis" column
@@ -134,82 +155,8 @@ for (plot in plots) {
 
 ```
 
-```{r}
-  #Boxplot of BMI by Diagnosis
-ggplot(data, aes(x = Diagnosis, y = BMI, group = Diagnosis)) + geom_boxplot(fill = "lightgreen") + labs(x = "Diagnosis", y = "BMI") + ggtitle("BMI by Diagnosis")
-
-  #Scatterplot of BloodPressure and Age
-ggplot(data, aes(x = Age, y = BloodPressure)) + geom_point(color = "blue", alpha = 0.6) + labs(x = "Age", y = "Blood Pressure") + ggtitle("Blood Pressure by Age")
-
-  #Barplot of Pregnancies
-ggplot(data, aes(x = Pregnancies)) + geom_bar(fill = "lightpink") + labs(x = "Pregnancies", y = "Count") +  ggtitle("Distribution of Pregnancies")
-
-  #Density Plot of Insulin by Diagnosis
-ggplot(data, aes(x = Insulin, fill = Diagnosis)) + geom_density(alpha = 0.5) + labs(x = "Insulin", y = "Density") + ggtitle("Insulin Distribution by Diagnosis")
-```
-
-The box plot of BMI by Diagnosis shows the two values of diagnosis (0 and 1) and see how BMI reacts to those values of Diagnosis. 0 represents people who are not diagnosed with diabetes and 1 represents people who have been diagnosed with diabetes. People who are diagnosed with diabetes have a higher BMI while people who are not diagnosed have a lower BMI. The median of people diagnosed is around 35, have more outliers, the highest value of the box is 39, and the lowest is 31. When we look at the people who are not diagnosed with diabetes the median is 30, fewer outliers, the highest value of the box being 36, and the lowest is 26.
-
-The scatter plot of Blood Pressure by Age shows that as age increases blood pressure also increases.
-
-The bar chart of Pregnancies show how many times people have been pregnant. Most people have been pregnant 1 time and the outlier being 17 which is the highest. We can also see that the plot is skewed to the right.
-
-Density graph of Insulin by Diagnosis
-
-## histogram
-```{r}
-# Create histograms for each variable
-numeric_vars <- names(data)[sapply(data, is.numeric)]
-for (var in numeric_vars) {
-  p <- ggplot(data, aes(x = .data[[var]])) +
-    geom_histogram(binwidth = 5, fill = "lightblue", color = "black") +
-    labs(x = var, y = "Frequency", title = paste("Histogram of", var)) +
-    theme_minimal()
-  
-  print(p)
-}
-```
-Pregnancies:
-
-Glucose:
-The histogram of Glucose shows that most people have a glucose level between 100 and 125. The highest level being 117 and the amount of people with that amount of Glucose level are around the 110.
-there is zero value which missing value mostlikely
-
-Blood Preasue:
-there si possibility of missing value in the blood preaseure since 0 is present
-
-Skin thickness:
-missing value 0
-
-Insulin:
-hug spike in 0 must be investivigated
-
-BMI:
-0 porbabluy missing value
-
-Pedigree:
-all equal, need to be investivigated
-
-AGE:
-seem some outlier with women over 60
-
-Diagnosis:
-Binary
-
-## violin plot
-```{r}
-# Create violin plots for each variable
-numeric_vars <- names(data)[sapply(data, is.numeric)]
-for (var in numeric_vars) {
-  p <- ggplot(data, aes(x = as.factor(Diagnosis), y = .data[[var]], fill = as.factor(Diagnosis))) +
-    geom_violin(trim = FALSE, scale = "width") +
-    labs(x = "Diagnosis", y = var, title = paste("Violin Plot of", var, "by Diagnosis")) +
-    theme_minimal()
-  
-  print(p)
-}
-
-```
+The box plot shows how the distribution of the data of each vraible categorize by the diagnosis. Most of the indiependent varaible doesnt shows clutered group that divide the diagnosis clearly. the only varaible thats shows good pattern is glucose. it shows that people who has higher glucose is more likely Diagnos as 1 or positive Gastional Diabetes.
+The box plot also shows that there is outlair present.
 
 
 
@@ -225,6 +172,22 @@ for (var in numeric_vars) {
 }
 
 ```
+This plot shows density of the data categorized by diagnosis. It showed how many data clustered in the are of each value in the independt varaible. In the pregnancies we can see that there are more people diagnosed (0) Negative when they have lower number of pregnancies, and continue to decreaseing sharply when the number of pregnancies get higher. for when it diagnosed as 1, the number is still high in the begenning but not as high as (0). the higher the number of pregnancies the number of people diagnosed continue the same, but looking at the over al population, it shows that the higher number of preganancies the higher chances that people diagnosed as postive (1)
+
+In the Glucose density plot we can see graph similar to gaussian distribution that shows how the data clustered. it shows quite obvious pattern of how the data divided based on the Diagnosis. But there still quite large are of overallaping which is lowering the accuracy.
+
+The BloodPreassure has very similar diagnosed between 2 group. it's very hard to decide the diagnosis just from this varabiale alone, since most of the are is overalapping.
+
+Skin thcikness also the same most area is overalappign and it has very high number of 0
+
+The insulin density plot shows that, people has higher Insulin has more chance of poeple diangosed as postive (1)
+
+The BMI plot shows like two mountains that almost overallping with each other. the higher BMi shows more chance of the preson diagnosed as positive(1). But the BMI graph also has quite big overlapping area which mostly in value 30 that makes it harder to dicide the diagnosis in that area.
+
+Pedigree also shows similar plto to Insulin which shows more poeople diagnosed as postive the higher the Pedigree, But in the plot we can see some exception in the value around 1.75 where there more poeple diagnosed as negative (0)
+
+For the variable AGE it showed that the older the people, the higher the chance to get diagnose as postive (1)
+
 
 ## Corelation Pregnancy Diagnostic
 ```{r}
@@ -240,20 +203,8 @@ barplot(diagnostic_counts,
         beside = TRUE)
 ```
 
-The more number of pregnancies shows higher chance of the person diagnos as GDM
+This plot is comparing the diagnostic in each number of preganncies. it shows that the more number of pregnancies shows higher chance of the person diagnose as GDM. The data also shows that the number of observation is more bias toward person that has lower number of pregnancies.
 
-## SKinthckiness vs BMI (diagnsois)
-```{r}
-# Create a scatter plot with different colors for each diagnosis category
-ggplot(data, aes(x = SkinThickness, y = BMI, color = Diagnosis)) +
-  geom_point() +
-  labs(x = "Skin Thickness", y = "BMI", color = "Diagnosis") +
-  theme_minimal()
-
-```
-
-skinThickness and BMi shows a postive corelation but, some of the skin thcikness that has value 0 make the correlation lower.
-the skin thickness with value 0 might be potential missing value but consdering the amount so many might influence the original data
 
 # D) missing value
 
@@ -275,10 +226,11 @@ p <- ggplot(missing_counts_long, aes(x = Variable, y = Missing_Count, fill = Var
 print(p)
 
 ```
-It shows that Diagnosis has highes since it contatin 0 but we know that it's not missing value but actual value
-For the varaible Insulin and skinthckiness and preganncies showing execptionaly high number of 0 which might not a missing value
-
-
+It shows that Diagnosis has highes since it contatin 0 but we know that it's not missing value but actual value.
+The number of 0 in Preganncies considerably high but it still make sense and still follow the normal distribution
+For the varaible Insulin and skinthckiness and preganncies showing execptionaly high number of 0 which might not be a missing value, but the distribution become really badly skewed. so we came with two approach: 
+1. CLEANDATA: Without replacing INSULIN and Skinthckness
+2. CLEANDATA2: replace all 0 with mdeian
 
 ```{r}
 # Create a new dataframe called missdata
@@ -319,6 +271,28 @@ cleandata$BloodPressure <- ifelse(cleandata$BloodPressure == 0, median_bp, clean
 cleandata$BMI <- ifelse(cleandata$BMI == 0, median_bmi, cleandata$BMI)
 ```
 
+### Replace ALL 0 to median
+except pregnancies
+```{r}
+cleandata2 <- cleandata
+
+median_BloodPressure <- median(cleandata2$BloodPressure, na.rm = TRUE)
+median_Insulin <- median(cleandata2$Insulin, na.rm = TRUE)
+mean_SkinThickness <- mean(cleandata2$SkinThickness, na.rm = TRUE)
+
+# Replace 0 with median in Glucose column
+cleandata2$BloodPressure <- ifelse(cleandata2$BloodPressure == 0, median_BloodPressure, cleandata2$BloodPressure)
+
+# Replace 0 with median in BloodPressure column
+cleandata2$Insulin <- ifelse(cleandata2$Insulin == 0, median_Insulin, cleandata2$Insulin)
+
+# Replace 0 with median in BMI column
+cleandata2$SkinThickness <- ifelse(cleandata2$SkinThickness == 0, mean_SkinThickness, cleandata2$SkinThickness)
+
+```
+
+
+
 ## After Cleaning
 ```{r}
 # Calculate the number of missing values for each variable
@@ -340,17 +314,6 @@ print(p)
 ```
 
 # E) Outlier
-```{r}
-# Create box plot for each variable
-for (var in names(cleandata)) {
-  p <- ggplot(cleandata, aes(x = 1, y = cleandata[[var]])) +
-    geom_boxplot(fill = "lightblue", color = "black") +
-    labs(x = "", y = var, title = paste("Box Plot of", var)) +
-    theme_minimal() +
-    theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
-  print(p)
-}
-```
 
 
 ```{r}
@@ -403,33 +366,25 @@ for (var in selected_vars) {
 }
 ```
 
-
-### Box plot After replacement
-
 ```{r}
-# Create box plot for each variable
-for (var in names(cleandata)) {
-  p <- ggplot(cleandata, aes(x = 1, y = cleandata[[var]])) +
-    geom_boxplot(fill = "lightblue", color = "black") +
-    labs(x = "", y = var, title = paste("Box Plot of", var)) +
-    theme_minimal() +
-    theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
-  print(p)
+# replace outlair cleandata2 (all 0 replaced)
+selected_vars <- c("Pregnancies", "BloodPressure", "BMI", "Insulin", "SkinThickness", "Pedigree")
+
+winsorize <- function(x, trim = 0.05) {
+  q <- quantile(x, probs = c(trim, 1 - trim), na.rm = TRUE)
+  x[x < q[1]] <- q[1]
+  x[x > q[2]] <- q[2]
+  x
+}
+
+for (var in selected_vars) {
+  cleandata2[, var] <- winsorize(cleandata2[, var])
 }
 
 ```
 
 
-
 # G) Select Varaible from correlation table
-
-## pairs plot
-```{r}
-library(psych)
-
-pairs.panels(cleandata)
-```
-
 
 ```{r}
 # Calculate the correlation matrix
@@ -443,12 +398,7 @@ corrplot(cor_matrix, method = "color", type = "upper", tl.cex = 0.7, addCoef.col
 ```
 
 Glucose has the strongest correlation with the Diagnosis
-
-There is also posisbilities of multicoloniarity between Preagnancies and Age
-and between Insulin and skinthcikness
-
-Skinthickness and Insulin is removed since it has great umber of 0
-
+The varaible that we select is the top 4 that has highest corelation which is Glucose, BMI, Age, and Pregnancies
 
 # H) Standarization
 Standardizing features to a Gaussian distribution can be a good idea for several reasons:
@@ -478,11 +428,31 @@ stand_data <- as.data.frame(scale(cleandata[, independent_vars]))
 standdata[, independent_vars] <- stand_data
 head(standdata, 10)
 ```
-```{r}
-summary(standdata)
 
+```{r}
+# standarize data for cleandata2 (all 0 replaced)
+standdata2 <- cleandata2
+
+# Select the independent variables
+independent_vars <- names(cleandata2)[names(cleandata2) != "Diagnosis"]
+
+# Standardize the independent variables using Gaussian distribution
+stand_data2 <- as.data.frame(scale(cleandata2[, independent_vars]))
+
+standdata2[, independent_vars] <- stand_data2
 ```
 
+The data are standarized. and if we see the pairplot some of data are still not lookslike normaly distributted espcially Insulin and SKinthcikness which has exceptonally high number of 0. removing it is not option becasue the number of 0 is to high and the nubmer of data we have is also very low. We also try transforming the data with log transformation and boxcox transformation but it wont shows a nromal distribtuion in that vraible. so we dicided to use it as it is.
+
+# Transform following gaussian distirbuiton
+```{r}
+cleandata2
+```
+
+
+```{r}
+pairs.panels(standdata2)
+```
 
 It is good to standardize the feature so we can compare the variables, we can avoid bias, and we can assume that we have a normal distibution.
 
@@ -514,6 +484,8 @@ balanced_data <- standdata[balanced_indices, ]
 table(balanced_data$Diagnosis)
 ```
 
+Becasue there is imblance in the diagnosis, Normalizing the data is a good option to make the prediction not bias toward one of the varaible. the data becoem balnced to 500 (0) and 500 (1).
+
 # I) Model LRM1 (logistic regression with slected varaibles)
 
 ```{r}
@@ -526,7 +498,7 @@ trainData <- balanced_data[trainIndex, ]
 testData <- balanced_data[-trainIndex, ]
 
 # Create the formula for logistic regression
-formula <- as.formula("Diagnosis ~ Pregnancies + Glucose + BloodPressure + BMI + Pedigree + Age")
+formula <- as.formula("Diagnosis ~ Pregnancies + Glucose + BMI  + Age")
 
 # Fit the logistic regression model
 LRM1 <- glm(formula, data = trainData, family = "binomial")
@@ -539,7 +511,7 @@ We select variable by removing the Insulin and skinthcikness since it has except
 # J)  Model Report
 ```{r}
 # Select the desired columns including the "Diagnosis" column
-selected_data <- trainData[, c("Pregnancies", "Glucose", "BloodPressure", "BMI", "Pedigree", "Age", "Diagnosis")]
+selected_data <- trainData[, c("Pregnancies", "Glucose", "BMI", "Age", "Diagnosis")]
 
 # Predict using the model
 predictions <- predict(LRM1, newdata = selected_data, type = "response")
@@ -562,7 +534,7 @@ print(accuracy)
 print(confusion_matrix)
 
 ```
-The accuracy is 77.5% which mean from the data trained it only able to correctly predict 77.5% of it
+The accuracy is 75.3% which mean from the data trained it only able to correctly predict 75.3% of it
 
 # K) classification report (precision, recall, F1 score, and support)
 
@@ -642,7 +614,7 @@ predicted_classes <- ifelse(predictions > 0.5, 1, 0)
 
 # Convert predicted_classes and standdata$Diagnosis to factors with the same levels
 predicted_classes <- factor(predicted_classes, levels = c(0, 1))
-selected_data$Diagnosis <- factor(selected_data$Diagnosis, levels = c(0, 1))
+trainData$Diagnosis <- factor(trainData$Diagnosis, levels = c(0, 1))
 
 # Create a confusion matrix
 confusion_matrix2 <- confusionMatrix(predicted_classes, trainData$Diagnosis)
@@ -656,6 +628,7 @@ print(confusion_matrix2)
 ```
 
 The overall has slightly lower accuracy. it shows 77.0%
+
 
 ```{r}
 # Calculate precision
@@ -684,6 +657,71 @@ The F1 score value of 0.78 suggests a good balance between precision and recall 
 
 Support: Support refers to the number of actual instances belonging to the positive class in the dataset. In this case, the support value of 369  indicates that there are 369  instances classified as positive in the dataset.
 
+## accuracy test data LRM2
+
+
+
+# LRM3 (with 0 all replaced)
+```{r}
+# Set the seed for reproducibility
+set.seed(123)
+
+# Split the data into training and testing sets
+trainIndex <- createDataPartition(standdata2$Diagnosis, p = 0.8, list = FALSE)
+trainData <- standdata2[trainIndex, ]
+testData <- standdata2[-trainIndex, ]
+
+# Create the formula for logistic regression
+formula <- as.formula("Diagnosis ~ .")
+
+# Fit the logistic regression model
+LRM3 <- glm(formula, data = trainData, family = "binomial")
+
+summary(LRM3)
+```
+```{r}
+# Predict using the model
+predictions <- predict(LRM3, newdata = trainData, type = "response")
+
+# Convert predicted probabilities to class labels (0 or 1)
+predicted_classes <- ifelse(predictions > 0.5, 1, 0)
+
+# Convert predicted_classes and standdata$Diagnosis to factors with the same levels
+predicted_classes <- factor(predicted_classes, levels = c(0, 1))
+trainData$Diagnosis <- factor(trainData$Diagnosis, levels = c(0, 1))
+
+# Create a confusion matrix
+confusion_matrix3 <- confusionMatrix(predicted_classes, trainData$Diagnosis)
+
+# Calculate accuracy
+accuracy <- confusion_matrix3$overall['Accuracy']
+
+# Print the accuracy
+print(accuracy)
+print(confusion_matrix3)
+
+```
+```{r}
+# LRM3
+# Calculate precision
+precision <- confusion_matrix3$byClass["Pos Pred Value"]
+
+# Calculate recall
+recall <- confusion_matrix3$byClass["Sensitivity"]
+
+# Calculate F1 score
+f1_score <- 2 * (precision * recall) / (precision + recall)
+
+# Calculate support
+support <- confusion_matrix3$table[2,2]  # True positive count
+
+# Print the results
+cat("Precision:", precision, "\n")
+cat("Recall:", recall, "\n")
+cat("F1 Score:", f1_score, "\n")
+cat("Support:", support, "\n")
+```
+
 
 # N) Compare
 ```{r}
@@ -703,6 +741,7 @@ print(paste("p-value:", p_value))
 The obtained test statistic is 4.21, indicating that LRM2 provides a better fit than LRM1.
 The degrees of freedom are 2, representing the difference in the number of parameters between the two models.
 The p-value is 0.08, which is greater than the commonly used significance level of 0.05. This suggests that there is not enough evidence to reject the null hypothesis, indicating that the improvement provided by LRM2 is not significantly diffrent from LRM1.
+***compare 2 accuracy
 
 # O) Examine the coefficients - direction and significance of the relationship between the predictor variables and the outcome variable
 
@@ -826,7 +865,75 @@ The following are some suggestions for enhancing the chosen model's accuracy fur
 It is essential to keep in mind that the problem and dataset at hand may have different effects on these suggestions' efficacy. It is prescribed to explore different avenues regarding various methodologies and cautiously assess their effect on the model's presentation.
 
 
-# Improving Model by reducing TYPE-II ERROR
+Improving Model by reducing TYPE-II ERROR
+# LRM4
+higher recall is the goal
+```{r}
+# Set the seed for reproducibility
+set.seed(123)
 
+# Split the data into training and testing sets
+trainIndex <- createDataPartition(standdata2$Diagnosis, p = 0.8, list = FALSE)
+trainData <- standdata2[trainIndex, ]
+testData <- standdata2[-trainIndex, ]
 
+# Create the formula for logistic regression
+formula <- as.formula("Diagnosis ~ .")
+
+# Fit the logistic regression model
+LRM4 <- glm(formula, data = trainData, family = "binomial")
+
+summary(LRM4)
+
+```
+Reducing the Type 2 error by decreasing the threshold so more people will be diagnosed as postive. so there is less chance of people miss diagnosed as not postive to Gastional diabetes
+```{r}
+# Predict using the model
+predictions <- predict(LRM3, newdata = trainData, type = "response")
+
+# Convert predicted probabilities to class labels (0 or 1)
+predicted_classes <- ifelse(predictions > 0.35, 1, 0)
+
+# Convert predicted_classes and standdata$Diagnosis to factors with the same levels
+predicted_classes <- factor(predicted_classes, levels = c(0, 1))
+trainData$Diagnosis <- factor(trainData$Diagnosis, levels = c(0, 1))
+
+# Create a confusion matrix
+confusion_matrix3 <- confusionMatrix(predicted_classes, trainData$Diagnosis)
+
+# Calculate accuracy
+accuracy <- confusion_matrix3$overall['Accuracy']
+
+# Print the accuracy
+print(accuracy)
+print(confusion_matrix3)
+```
+
+After several trail and changing the threshold, 0.35 shows the best because doesnt change the accuracy. It also lower the Type 2 error. the number of person that are diagnosed as positive but actually not does increases, but the number of people that are consider negative (0) but turn out to have positive (1) decrease a lot
+
+previously (0.5 threshold) = FN / (TP+FN) =47  / (123+47 ) = 0.43
+the number of FN / (TP+FN) =84  / (160+84 ) = 0.2597
+The type 2 error score is reducing almost half and with maintaining the accuracy
+
+```{r}
+# LRM4
+# Calculate precision
+precision <- confusion_matrix3$byClass["Pos Pred Value"]
+
+# Calculate recall
+recall <- confusion_matrix3$byClass["Sensitivity"]
+
+# Calculate F1 score
+f1_score <- 2 * (precision * recall) / (precision + recall)
+
+# Calculate support
+support <- confusion_matrix3$table[2,2]  # True positive count
+
+# Print the results
+cat("Precision:", precision, "\n")
+cat("Recall:", recall, "\n")
+cat("F1 Score:", f1_score, "\n")
+cat("Support:", support, "\n")
+
+```
 
