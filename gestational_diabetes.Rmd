@@ -1,15 +1,11 @@
 ---
 title: "gestational_diabetes"
-output: pdf_document
+output: word_document
 date: "2023-05-23"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-```
-
-```{r}
-install.packages("visdat")
 ```
 
 #Library
@@ -85,12 +81,12 @@ ggplot(data, aes(x = factor(Diagnosis))) +
 
 ```
 
-there is inbalance of the Diagnosis data which we might need to balanced it since it is the target vraible
+there is imbalance of the Diagnosis data which we might need to balanced it since it is the target vraible
 
 ```{r}
 library(psych)
 
-pairs.panels(cleandata)
+pairs.panels(data)
 ```
 
 
@@ -194,7 +190,7 @@ For the variable AGE it showed that the older the people, the higher the chance 
 pregnancy_counts <-  table(data$Diagnosis, data$Pregnancies)
 
 # Create a side-by-side bar plot
-barplot(diagnostic_counts, 
+barplot(pregnancy_counts, 
         main = "Number of Pregnancies vs Diagnostic Outcome",
         xlab = "Diagnostic Outcome",
         ylab = "Number of Pregnancies",
@@ -444,11 +440,6 @@ standdata2[, independent_vars] <- stand_data2
 
 The data are standarized. and if we see the pairplot some of data are still not lookslike normaly distributted espcially Insulin and SKinthcikness which has exceptonally high number of 0. removing it is not option becasue the number of 0 is to high and the nubmer of data we have is also very low. We also try transforming the data with log transformation and boxcox transformation but it wont shows a nromal distribtuion in that vraible. so we dicided to use it as it is.
 
-# Transform following gaussian distirbuiton
-```{r}
-cleandata2
-```
-
 
 ```{r}
 pairs.panels(standdata2)
@@ -534,22 +525,28 @@ print(accuracy)
 print(confusion_matrix)
 
 ```
-The accuracy is 75.3% which mean from the data trained it only able to correctly predict 75.3% of it
+The accuracy is 73.25% which mean from the data trained it only able to correctly predict 75.3% of it
 
 # K) classification report (precision, recall, F1 score, and support)
 
 ```{r}
+# Extract values from the confusion matrix
+TP11 <- confusion_matrix$table[2, 2]
+FN10 <- confusion_matrix$table[1, 2]
+FP01 <- confusion_matrix$table[2, 1]
+
+
 # Calculate precision
-precision <- confusion_matrix$byClass["Pos Pred Value"]
+precision <- TP11 / (TP11 + FP01)
 
-# Calculate recall
-recall <- confusion_matrix$byClass["Sensitivity"]
+# Calculate recall (sensitivity)
+recall <- TP11 / (TP11 + FN10)
 
-# Calculate F1 score
+# Calculate F1-score
 f1_score <- 2 * (precision * recall) / (precision + recall)
 
 # Calculate support
-support <- confusion_matrix$table[2,2]  # True positive count
+support <- TP11 + FN10
 
 # Print the results
 cat("Precision:", precision, "\n")
@@ -559,13 +556,10 @@ cat("Support:", support, "\n")
 ```
 
 
-the precision value of 0.73 means that out of all the instances predicted as positive, around 73% were correctly classified as positive.
-
-The recall value of 0.85 indicates that the model correctly identified around 85% of the actual positive instances.
-
-The F1 score value of 0.79 suggests a good balance between precision and recall for the model's performance.
-
-Support: Support refers to the number of actual instances belonging to the positive class in the dataset. In this case, the support value of 369  indicates that there are 369  instances classified as positive in the dataset.
+the precision value of 0.74 means that out of all the instances predicted as positive, around 76% were correctly classified as positive.
+The recall value of 0.7 indicates that the model correctly identified around 73% of the actual positive instances.
+The F1 score value of 0.72 suggests a good balance between precision and recall for the model's performance.
+Support: Support refers to the number of actual instances belonging to the positive class in the dataset. In this case, the support value of 400  indicates that there are 400  instances classified as positive in the dataset.
 
 
 # L) accuracy score of your model
@@ -589,15 +583,23 @@ accuracy <- sum(predicted_classes == actual_values) / length(actual_values)
 print(accuracy)
 ```
 Accuracy: Classification models frequently use accuracy as an evaluation criterion. It addresses the extent of right expectations out of the absolute number of forecasts. The ratio of the number of accurate predictions to the total number of predictions is used to calculate it.
-The LRM1 model's accuracy score in this instance is 0.765, indicating that approximately 73% of its predictions were correct.
+The LRM1 model's accuracy score in this instance is 0.775, indicating that approximately 77.5% of its predictions were correct.which actually suprisngly higher than trained data prediction. it mean that the model is not overfitted and able to predict new data well
 
 # M) Model LRM2 - Full model
 ```{r}
+# Set the seed for reproducibility
+set.seed(123)
+
+# Split the data into training and testing sets
+trainIndex <- createDataPartition(balanced_data$Diagnosis, p = 0.8, list = FALSE)
+trainData2 <- balanced_data[trainIndex, ]
+testData2 <- balanced_data[-trainIndex, ]
+
 # Create the formula for logistic regression
 formula <- as.formula("Diagnosis ~ .")
 
 # Fit the logistic regression model
-LRM2 <- glm(formula, data = trainData, family = "binomial")
+LRM2 <- glm(formula, data = trainData2, family = "binomial")
 
 summary(LRM2)
 
@@ -607,7 +609,7 @@ summary(LRM2)
 
 ```{r}
 # Predict using the model
-predictions <- predict(LRM2, newdata = trainData, type = "response")
+predictions <- predict(LRM2, newdata = trainData2, type = "response")
 
 # Convert predicted probabilities to class labels (0 or 1)
 predicted_classes <- ifelse(predictions > 0.5, 1, 0)
@@ -627,21 +629,24 @@ print(accuracy)
 print(confusion_matrix2)
 ```
 
-The overall has slightly lower accuracy. it shows 77.0%
-
-
 ```{r}
+# Extract values from the confusion matrix
+TP11 <- confusion_matrix2$table[2, 2]
+FN10 <- confusion_matrix2$table[1, 2]
+FP01 <- confusion_matrix2$table[2, 1]
+
+
 # Calculate precision
-precision <- confusion_matrix2$byClass["Pos Pred Value"]
+precision <- TP11 / (TP11 + FP01)
 
-# Calculate recall
-recall <- confusion_matrix2$byClass["Sensitivity"]
+# Calculate recall (sensitivity)
+recall <- TP11 / (TP11 + FN10)
 
-# Calculate F1 score
+# Calculate F1-score
 f1_score <- 2 * (precision * recall) / (precision + recall)
 
 # Calculate support
-support <- confusion_matrix2$table[2,2]  # True positive count
+support <- TP11 + FN10
 
 # Print the results
 cat("Precision:", precision, "\n")
@@ -649,16 +654,31 @@ cat("Recall:", recall, "\n")
 cat("F1 Score:", f1_score, "\n")
 cat("Support:", support, "\n")
 ```
-the precision value of 0.73 means that out of all the instances predicted as positive, around 73% were correctly classified as positive.
+```{r}
+# Predict using the model
+predictions <- predict(LRM2, newdata = testData2, type = "response")
 
-The recall value of 0.84 indicates that the model correctly identified around 85% of the actual positive instances.
+# Convert predicted probabilities to class labels (0 or 1)
+predicted_classes <- ifelse(predictions > 0.5, 1, 0)
 
-The F1 score value of 0.78 suggests a good balance between precision and recall for the model's performance.
+actual_values <- testData2$Diagnosis
 
-Support: Support refers to the number of actual instances belonging to the positive class in the dataset. In this case, the support value of 369  indicates that there are 369  instances classified as positive in the dataset.
+# Calculate the accuracy
+accuracy <- sum(predicted_classes == actual_values) / length(actual_values)
 
-## accuracy test data LRM2
+# Print the accuracy
+print(accuracy)
+```
 
+the precision value of 0.75 means that out of all the instances predicted as positive, around 77% were correctly classified as positive.
+
+The recall value of 0.7 indicates that the model correctly identified around 75% of the actual positive instances.
+
+The F1 score value of 0.724 suggests a good balance between precision and recall for the model's performance.
+
+Support: Support refers to the number of actual instances belonging to the positive class in the dataset. In this case, the support value of 400  indicates that there are 400  instances classified as positive in the dataset.
+
+Overall model LRM2 with all dataset shows a slightly better accruacy of 0.7363 or 73.63% which higher than previous model LRM1 73.25%. and the perfomance of the Recall, Precision is also higher which mean the LRM2 is slightly better than LRM1 in all aspects. The test data shows similar accuracy of 77.5%
 
 
 # LRM3 (with 0 all replaced)
@@ -703,17 +723,23 @@ print(confusion_matrix3)
 ```
 ```{r}
 # LRM3
+# Extract values from the confusion matrix
+TP11 <- confusion_matrix3$table[2, 2]
+FN10 <- confusion_matrix3$table[1, 2]
+FP01 <- confusion_matrix3$table[2, 1]
+
+
 # Calculate precision
-precision <- confusion_matrix3$byClass["Pos Pred Value"]
+precision <- TP11 / (TP11 + FP01)
 
-# Calculate recall
-recall <- confusion_matrix3$byClass["Sensitivity"]
+# Calculate recall (sensitivity)
+recall <- TP11 / (TP11 + FN10)
 
-# Calculate F1 score
+# Calculate F1-score
 f1_score <- 2 * (precision * recall) / (precision + recall)
 
 # Calculate support
-support <- confusion_matrix3$table[2,2]  # True positive count
+support <- TP11 + FN10
 
 # Print the results
 cat("Precision:", precision, "\n")
@@ -722,26 +748,51 @@ cat("F1 Score:", f1_score, "\n")
 cat("Support:", support, "\n")
 ```
 
+```{r}
+# Predict using the model
+predictions <- predict(LRM3, newdata = testData, type = "response")
+
+# Convert predicted probabilities to class labels (0 or 1)
+predicted_classes <- ifelse(predictions > 0.5, 1, 0)
+
+actual_values <- testData$Diagnosis
+
+# Calculate the accuracy
+accuracy <- sum(predicted_classes == actual_values) / length(actual_values)
+
+# Print the accuracy
+print(accuracy)
+```
+The model of LRM3 which the model are normalize to follow gaussian distribtuion and all the 0 are replaced shows higher accuracy than all previous model with 77.1% accuracy. But the model shows lower Recall value of 0.56 which very low compare to other model which has recall highe than 0.7. same with the precision it also lowerm but not as much as the precision. since the Precision and the recall is lower the F1 score also become lower. the testdata accruacy is 77.1% which slightly lower than trained data accuracy and compared to previous model it's also lightly lower.
 
 # N) Compare
-```{r}
-# Perform likelihood ratio test
-lr_test <- anova(LRM1, LRM2, test = "LRT")
+-Model LRM1
+train acc: 73.25%
+Precision: 0.7460317 
+Recall: 0.705 
+F1 Score: 0.7249357 
+Support: 400 
+test acc: 77.5%
 
-# Extract the test statistic, degrees of freedom, and p-value
-test_statistic <- lr_test$Deviance[2]
-degrees_of_freedom <- lr_test$Df[2]
-p_value <- 1 - pchisq(test_statistic, degrees_of_freedom)
+-Model LRM2
+train acc: 73.63%
+Precision: 0.752 
+Recall: 0.705 
+F1 Score: 0.7277419 
+Support: 400 
+test acc: 77.5%
 
-# Print the test results
-print(paste("Test Statistic:", test_statistic))
-print(paste("Degrees of Freedom:", degrees_of_freedom))
-print(paste("p-value:", p_value))
-```
-The obtained test statistic is 4.21, indicating that LRM2 provides a better fit than LRM1.
-The degrees of freedom are 2, representing the difference in the number of parameters between the two models.
-The p-value is 0.08, which is greater than the commonly used significance level of 0.05. This suggests that there is not enough evidence to reject the null hypothesis, indicating that the improvement provided by LRM2 is not significantly diffrent from LRM1.
-***compare 2 accuracy
+-Model LRM3
+train acc: 77.23%
+Precision: 0.7235294 
+Recall: 0.5694444 
+F1 Score: 0.6373057 
+Support: 216
+test acc: 77.12%
+
+The model LRM3 shows the highest trained data accuracy but the previous 2 model LRM1 and LRM2 has higher accuracy in the testing data with 77.5%. the diffrence of accuracy of the model is not that much so it's hardly to say which one is better. but if we see the F1 score shows that LRM2 is better. in medical field predicting correct is very imprtant. the lower the higher f1 score mean less mistake made during prediction. So, overall LRM2 with all feature use, but keep 0 for Insulin and Skinthcikness is the best perfomance.
+
+
 
 # O) Examine the coefficients - direction and significance of the relationship between the predictor variables and the outcome variable
 
@@ -783,7 +834,6 @@ for (i in 1:length(coefficients)) {
 ```
 
 # P) hypothesis tests that your model is significantly better.
-Bernouli Test
 ```{r}
 # Set the desired significance level
 significance_level <- 0.05
@@ -807,36 +857,47 @@ num_tests <- 4
 # Adjust the significance level using the Bonferroni correction
 adjusted_significance_level <- significance_level / num_tests
 
+# Print the results
+cat("Test Statistic:", test_statistic, "\n")
+cat("Degrees of Freedom:", degrees_of_freedom, "\n")
+cat("p-value:", p_value, "\n")
+cat("adjusted significance level:", adjusted_significance_level, "\n")
+
+# Compare the p-value with the adjusted significance level
+if (p_value < significance_level) {
+  print("Reject the null hypothesis - LRM2 is significantly better than LRM1")
+} else {
+  print("Fail to reject the null hypothesis - LRM2 is not significantly better than LRM1")
+}
+```
+Test Results: The value of the test statistic is 11.28436 . The likelihood ratio test, which compares the fit of Models 0 (the null model) and 1 (the alternative model), yields this value. Stronger evidence against the null hypothesis can be seen in a test statistic that is larger.
+
+Degree of Freedom: The test statistic has a 1 degree of freedom associated with it. This is the estimated difference between Model 0 and Model 1 in the number of parameters.
+
+p-value: The p-value, which was determined to be 0.02354735, is > 0.05 (adjusted significant level). So we fail to reject the null hypothesis. therefore the model LRM2 is not significantly better than LRM1 in term of train data accuracy.
+
+
+# q) Bonferroni correction
+```{r}
+significance_level <- 0.05
+num_tests <- 4
+# Adjust the significance level using the Bonferroni correction
+adjusted_significance_level <- significance_level / num_tests
+
+# Print the adjusted significance level and interpretation
+cat("Adjusted Significance Level:", adjusted_significance_level, "\n")
+
 # Compare the p-value with the adjusted significance level
 if (p_value < adjusted_significance_level) {
   print("Reject the null hypothesis - LRM2 is significantly better than LRM1")
 } else {
   print("Fail to reject the null hypothesis - LRM2 is not significantly better than LRM1")
 }
+
+
 ```
 
-# q) Bonferroni correction
-```{r}
-# Original significance level
-alpha <- 0.05
-
-# Number of hypothesis tests
-num_tests <- 1
-
-# Bonferroni-corrected significance level
-adjusted_alpha <- alpha / num_tests
-
-# Perform hypothesis test using adjusted significance level
-if (p_value < adjusted_alpha) {
-  interpretation <- "Reject the null hypothesis. Model 1 is significantly better than Model 0."
-} else {
-  interpretation <- "Fail to reject the null hypothesis. Model 1 is not significantly better than Model 0."
-}
-
-# Print the adjusted significance level and interpretation
-cat("Adjusted Significance Level:", adjusted_alpha, "\n")
-cat("Interpretation:", interpretation, "\n")
-```
+We still fail to reject the null hypothesis even with the bonferroni correction. So it mean the model LRM2 is not significantly better than model LRM1
 
 # r) suggestions for further improving the accuracy of your chosen model
 
@@ -866,16 +927,35 @@ It is essential to keep in mind that the problem and dataset at hand may have di
 
 
 Improving Model by reducing TYPE-II ERROR
+1. The first suggestion of improving acuracy is by using diffrent model that can capture non linear data such as random forest, decision tree, ensamble learning, or Nerual network.
+
+2. Increase the number of observation. the more data we have the better model performance is. Also the more data we have, will have more normally distributed data, and we can have option to remove data instead of replacing it which can make the model bias.
+
+3. Engineering of Features: Investigate additional methods of feature engineering to construct relevant new features from existing ones. Combining features, generating interaction terms, or extracting relevant data are all examples of this.
+
+4. Selection of Features: Utilize techniques for feature selection to identify the model's most essential features. This can help focus on the most relevant predictors while reducing noise. Recursive Feature Elimination (RFE), Lasso regression, and feature importance from tree-based models are all options.
+
+5. Explore Blunders: Examine the model's mistakes to learn more about the kinds of situations it faces. This can direct further enhancements, like gathering extra highlights or tending to explicit examples in the information.
+
+6. Regularization: To avoid overfitting and boost model performance, use regularization methods like L1 and L2 regularization.
+
+7. Skills in the Field: Include domain expertise in the modeling procedure. Think about consulting domain experts to learn more about the problem's particular characteristics and incorporate their insights into feature engineering or model design.
+
+
+
+
 # LRM4
+If the model has a high rate of false negatives, it means that women who are actually at risk for gestational diabetes may go undetected. This can result in delayed interventions, missed opportunities for early treatment or preventive measures, and potential complications for both the mother and the baby. Thats why we are trying to reducing type 2 error
+
 higher recall is the goal
 ```{r}
 # Set the seed for reproducibility
 set.seed(123)
 
 # Split the data into training and testing sets
-trainIndex <- createDataPartition(standdata2$Diagnosis, p = 0.8, list = FALSE)
-trainData <- standdata2[trainIndex, ]
-testData <- standdata2[-trainIndex, ]
+trainIndex <- createDataPartition(balanced_data$Diagnosis, p = 0.8, list = FALSE)
+trainData <- balanced_data[trainIndex, ]
+testData <- balanced_data[-trainIndex, ]
 
 # Create the formula for logistic regression
 formula <- as.formula("Diagnosis ~ .")
@@ -889,51 +969,67 @@ summary(LRM4)
 Reducing the Type 2 error by decreasing the threshold so more people will be diagnosed as postive. so there is less chance of people miss diagnosed as not postive to Gastional diabetes
 ```{r}
 # Predict using the model
-predictions <- predict(LRM3, newdata = trainData, type = "response")
+predictions <- predict(LRM4, newdata = trainData, type = "response")
 
 # Convert predicted probabilities to class labels (0 or 1)
-predicted_classes <- ifelse(predictions > 0.35, 1, 0)
+predicted_classes <- ifelse(predictions > 0.4, 1, 0)
 
 # Convert predicted_classes and standdata$Diagnosis to factors with the same levels
 predicted_classes <- factor(predicted_classes, levels = c(0, 1))
 trainData$Diagnosis <- factor(trainData$Diagnosis, levels = c(0, 1))
 
 # Create a confusion matrix
-confusion_matrix3 <- confusionMatrix(predicted_classes, trainData$Diagnosis)
+confusion_matrix4 <- confusionMatrix(predicted_classes, trainData$Diagnosis)
 
 # Calculate accuracy
-accuracy <- confusion_matrix3$overall['Accuracy']
+accuracy <- confusion_matrix4$overall['Accuracy']
 
 # Print the accuracy
 print(accuracy)
-print(confusion_matrix3)
+print(confusion_matrix4)
 ```
-
-After several trail and changing the threshold, 0.35 shows the best because doesnt change the accuracy. It also lower the Type 2 error. the number of person that are diagnosed as positive but actually not does increases, but the number of people that are consider negative (0) but turn out to have positive (1) decrease a lot
-
-previously (0.5 threshold) = FN / (TP+FN) =47  / (123+47 ) = 0.43
-the number of FN / (TP+FN) =84  / (160+84 ) = 0.2597
-The type 2 error score is reducing almost half and with maintaining the accuracy
 
 ```{r}
 # LRM4
+# Extract values from the confusion matrix
+TP11 <- confusion_matrix4$table[2, 2]
+FN10 <- confusion_matrix4$table[1, 2]
+FP01 <- confusion_matrix4$table[2, 1]
+
+
 # Calculate precision
-precision <- confusion_matrix3$byClass["Pos Pred Value"]
+precision <- TP11 / (TP11 + FP01)
 
-# Calculate recall
-recall <- confusion_matrix3$byClass["Sensitivity"]
+# Calculate recall (sensitivity)
+recall <- TP11 / (TP11 + FN10)
 
-# Calculate F1 score
+# Calculate F1-score
 f1_score <- 2 * (precision * recall) / (precision + recall)
 
 # Calculate support
-support <- confusion_matrix3$table[2,2]  # True positive count
+support <- TP11 + FN10
 
 # Print the results
 cat("Precision:", precision, "\n")
 cat("Recall:", recall, "\n")
 cat("F1 Score:", f1_score, "\n")
 cat("Support:", support, "\n")
-
 ```
+```{r}
+# Predict using the model
+predictions <- predict(LRM4, newdata = testData, type = "response")
+
+# Convert predicted probabilities to class labels (0 or 1)
+predicted_classes <- ifelse(predictions > 0.5, 1, 0)
+
+actual_values <- testData$Diagnosis
+
+# Calculate the accuracy
+accuracy <- sum(predicted_classes == actual_values) / length(actual_values)
+
+# Print the accuracy
+print(accuracy)
+```
+
+After changing the threshold into 0.4, shows that it still maintained original accuracy, even more it slightly increase the accuracy by 0.001. The recall is greatly boos from 0.75 to 0.85. This is mean that the model has less FN, which mean there is less people that are not diagnosed postive. In other word there are will be more woman will be able to recieve treatment and reducing the chance of woman who has gastional diabetes undetected. But this model is actaully quite low for medical field. Therefore this model should be only use for early diagnosis only, then the person can be tested using OGTT to detect the Gastional diabetes.
 
